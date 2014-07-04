@@ -1,0 +1,34 @@
+{% extends 'management/base.html' %}{% load static %}
+
+        {% block title %}Dashboard{% endblock %}
+        {%block content %}
+        <div class="col-md-6">
+            <div class="rep">
+            <h1>20 organizaciones nuevas</h1>
+            {% if latest_org_list %}
+                <ul>
+                {% for org in latest_org_list %}
+                    <li><a href="/management/organization/{{ org.url }}">{{ org.name }} : {{org.country }} {{org.country.region }}</a></li>
+                {% endfor %}
+                </ul>
+            {% else %}
+                <p>No hay organizaciones.<a href="/management/create_organization_form/">¿Te gustaría añadir uno?</a></p>
+            {% endif %}
+          </div>
+          </div>
+        <div class="col-md-6">
+        <div class="rep">
+
+             <h1>10 viajes recientes </h1>
+            {% if latest_trip_list %}
+                <ul>
+                {% for trip in latest_trip_list %}
+                    <li><a href="">{{ trip.date }} - {{trip.org }}</a></li>
+                {% endfor %}
+                </ul>
+            {% else %}
+                <p>No hay viajes.</p>
+            {% endif %}
+        </div>
+        </div>
+        {% endblock %}

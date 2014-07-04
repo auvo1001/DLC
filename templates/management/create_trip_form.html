@@ -1,0 +1,38 @@
+{% extends 'management/base.html' %}{{ form.media }}{% load static %}
+{% block title %}Add new Trip{% endblock %}
+         {%block stylesheet %}
+
+ <link href="{% static 'css/datepicker.css' %}" rel="stylesheet">
+	<link href="{% static 'css/normalize.css' %}" rel="stylesheet">
+      {% endblock %}
+
+{% block content %}
+        {% if not organization_name_url %}
+			<div style="color: red;">The specified organization {{organization_name_url}} does not exist!</div>
+		{% else %}
+            <div class="jumbotrona">
+        	<form class="span6" id="create_trip_form" method="post" action="/management/organization/{{ organization_name_url }}/create_trip_form/">
+
+            	{% csrf_token %}
+            	{% for hidden in form.hidden_fields %}
+            	    {{ hidden }}
+            	{% endfor %}
+
+                <label for="date">Fecha: </label>
+                <input class="form-control datepicker" name="date" placeholder="Fecha"  value="" size="100" required autofocus />
+                <input type="submit" text="submit" class="btn btn-primary" value="Añadir Un Viaje" />
+                {% endif %}
+		         <a href="/management/organization/{{ organization_name_url }}/" class="btn btn-danger">Cancelar</a>
+            </form>
+            </div>
+{% endblock %}
+
+ {%block script %}
+     <script src="//code.jquery.com/jquery-1.10.2.js"></script>
+  <script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+   <script type="text/javascript">
+$(function() {
+  $(".datepicker").datepicker();
+             });
+    </script>
+ {% endblock %}
