@@ -7,39 +7,10 @@
 <div class="org">
     <div class="col-md-12">
         <div class="profile">
-            <h1>{{ organization.name }}</h1>
-            <table class="table table-striped">
-                <tbody>
-                <tr>
-                    <td>Línea de dirección 1:</td>
-                    <td>{{ organization.address1 }}</td>
-                </tr>
-                <tr>
-                    <td>Línea de dirección 2:</td>
-                    <td>{{ organization.address2 }}</td>
-                </tr>
-                <tr>
-                    <td>Ciudad:</td>
-                    <td>{{ organization.city }}</td>
-                </tr>
-                <tr>
-                    <td>Estado/ Provincia:</td>
-                    <td>{{ organization.state_province }}</td>
-                </tr>
-                <tr>
-                    <td>URL:</td>
-                    <td><a href="{{organization.url }}" />{{organization.url }}</td>
-                </tr>
-                <tr>
-                    <td>País:</td>
-                    <td>{{organization.country }}</td>
-                </tr>
-                <tr>
-                    <td>Región:</td>
-                    <td>{{organization.country.region }}</td>
-                </tr>
-                </tbody>
-            </table>
+
+            {% for object in objects %}
+                {{object}}
+            {% endfor %}
 
             <p><a class="btn btn-primary btn-lg" role="button" href="/management/organization/{{organization_name_url}}/edit">Editar</a>
         </div>

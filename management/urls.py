@@ -6,7 +6,12 @@ from django.conf import settings
 urlpatterns = patterns('',
 
     url(r'^$', views.index, name='index'),
-
+    url(r'^add_package/$', views.add_package, name='add_package'),
+    url(r'^add_sender/$', views.add_sender, name='add_sender'),
+    url(r'^add_receiver/$', views.add_receiver, name='add_receiver'),
+    url(r'^sender/(?P<sender_url>\w+)/$', views.detail_sender, name='sender_detail'),
+    url(r'^logout/$',views.logout_view,name='logout'),
+    url(r'^login/$',views.login_view,name='login'),
     )
 
 

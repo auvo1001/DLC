@@ -1,6 +1,9 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
+from django.utils.encoding import iri_to_uri
+from django.utils.http import urlquote
+
 
 # Create your models here.
 class Tinh(models.Model):
@@ -25,7 +28,8 @@ class Sender(models.Model):
     updated = models.DateTimeField(auto_now=True)
 
     def __unicode__(self):
-        return '%s %s %s' % (self.fname, self.lname, self.phone)
+        return self.phone
+
 
 class Receiver(models.Model):
     fname = models.CharField(max_length=255)
@@ -35,16 +39,16 @@ class Receiver(models.Model):
     quan_huyen = models.CharField( max_length=255)
     tinh_thanhpho = models.ForeignKey(Tinh)
     phone1 = models.CharField(max_length=50)
-    phone2 = models.CharField(max_length=50)
+    phone2 = models.CharField(max_length=50, blank=True)
     email = models.EmailField(max_length=100, blank=True)
     added = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
 
-def __unicode__(self):
-        return '%s %s %s' % (self.fname, self.lname, self.phone)
+    def __unicode__(self):
+        return self.phone1
 
 class Package(models.Model):
-    tracking = models.BigIntegerField()
+    tracking = models.CharField(max_length=255)
     sender = models.ForeignKey(Sender)
     receiver = models.ForeignKey(Receiver)
     weight = models.IntegerField()
@@ -57,7 +61,9 @@ class Package(models.Model):
     price = models.IntegerField()
     added = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
-    status = models.CharField(max_length=50) #bat dau, dang den VN, den VN, da gui xong
+    status = models.CharField(max_length=50) #bat dau, tren may bay, den Hai Quan VN, da giao hang
+    sender2 = models.CharField(max_length=255)
+    phone2 = models.CharField(max_length=50)
     #upload file?
 
     def __unicode__(self):

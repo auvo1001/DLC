@@ -1,0 +1,43 @@
+<div class="jumbotrona">
+    <h1>Người gửi</h1>
+<form action="/management/add_sender/" role="form" method="post">{% csrf_token %}
+
+
+    <label for="lname">Họ </label>
+        <input type="text" class="form-control" placeholder="Họ" name="lname" value="" size="255" required autofocus />
+        <br />
+
+    <label for="fname">Tên</label>
+        <input type="text" class="form-control" placeholder="Tên" name="fname" value="" size="255" required autofocus />
+        <br />
+
+    <label for="address2">Địa chỉ 1: </label>
+        <input type="text" class="form-control" placeholder="Địa chỉ 1" name="address1" value="" size="255" required autofocus />
+        <br />
+
+    <label for="address2">Địa chỉ 2: </label>
+        <input type="text" class="form-control" placeholder="Địa chỉ 2" name="address2" value="" size="255"  autofocus />
+        <br />
+
+    <label for="city">Thành Phố: </label>
+        <input type="text" class="form-control" placeholder="Thành Phố" name="city" value="" size="128" required autofocus />
+        <br />
+
+
+     <label for="phone">Điện Thoại 1: </label>
+        <input type="number" class="form-control" placeholder="Điện Thoại 1" name="phone1" value="" size="50" required autofocus />
+        <br />
+
+    <label for="phone">Điện Thoại 2: </label>
+        <input type="number" class="form-control" placeholder="Điện Thoại 2" name="phone2" value="" size="50"  autofocus />
+        <br />
+
+     <label for="email">Email: </label>
+        <input type="email" class="form-control" placeholder="email" name="email" email="" size="100" autofocus />
+        <br />
+
+
+    <input type="submit" class="btn btn-primary" value="Submit" />
+</form>
+</div>
+
