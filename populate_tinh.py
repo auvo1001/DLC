@@ -79,7 +79,7 @@ def add_tinh(name,region,price_type):
     return c
 
 if __name__ =='__main__':
-    print "Starting Country population script..."
+    print "Starting Tinh population script..."
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'DLC.settings')
     from management.models import Tinh
     populate()

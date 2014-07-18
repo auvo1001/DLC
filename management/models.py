@@ -48,26 +48,37 @@ class Receiver(models.Model):
         return self.phone1
 
 class Package(models.Model):
-    tracking = models.CharField(max_length=255)
+    # tracking = models.CharField(max_length=255)
     sender = models.ForeignKey(Sender)
     receiver = models.ForeignKey(Receiver)
-    weight = models.IntegerField()
+    weight = models.DecimalField(max_digits= 5, decimal_places=1)
     piece = models.IntegerField()
-    content = models.TextField(blank=True)
+    content = models.TextField()
     value = models.IntegerField()
-    insurance = models.IntegerField(blank=True)
-    tax = models.IntegerField(blank=True)
-    extra_charge = models.IntegerField(blank=True)
-    price = models.IntegerField()
+    insurance = models.IntegerField( null=True, blank=True)
+    tax = models.IntegerField( null=True, blank=True)
+    extra_charge = models.IntegerField( null=True, blank=True)
+    # price = models.IntegerField()
     added = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
-    status = models.CharField(max_length=50) #bat dau, tren may bay, den Hai Quan VN, da giao hang
-    sender2 = models.CharField(max_length=255)
-    phone2 = models.CharField(max_length=50)
+    status = models.CharField(max_length=50,blank=True) #bat dau, tren may bay, den Hai Quan VN, da giao hang
+    sender2 = models.CharField(max_length=255,blank=True)
+    phone2 = models.CharField(max_length=50,blank=True)
     #upload file?
 
-    def __unicode__(self):
-        return self.tracking
+    # def get_rate(self):
+    #     price_type = Receiver.objects.get(phone1=package.receiver.phone1).price_type
+    #     if price_type == 1:
+    #         return 3
+    #     else price_type == 2:
+    #         return 4
+
+    # def get_price(self):
+    #     price  = weight * rate + insurance + tax + extra_charge
+    #     return price
+    def get_absolute_url(self):
+        return self.id
+
 
 class Store(models.Model):
     name = models.CharField(max_length=255)
