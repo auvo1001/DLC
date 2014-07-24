@@ -25,6 +25,7 @@ body {
 .profile h1 {
 text-align: center;
 }
+
 .rep {
     background-color:#eee;
     border-radius: 6px;
@@ -36,3 +37,5 @@ text-align: center;
     border-radius: 6px;
     padding: 15px;
 }
+
+

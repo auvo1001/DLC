@@ -2,54 +2,50 @@
 
 {% block title %}Chi Tiết Kiện Hàng{% endblock %}
 {%block content %}
-
 <div class="jumbotrona">
 
     <h1>Chi Tiết Kiện Hàng</h1>
 
     <form action="" role="form" method="post">{% csrf_token %}
+{{sender}}
+      {% for hidden in form.hidden_fields %}
+                {{ hidden }}
+            {% endfor %}
+        <!--<input name="sender" />-->
+        <!--<input name="receiver" />-->
+        <!--{{form.sender}}-->
+        <!--{{form.receiver}}-->
 
-
-        <label for="lname">Họ </label>
-        <input type="text" class="form-control" placeholder="Họ" name="lname" value="" size="255" required autofocus/>
+        <label for="weight">Cân nặng: </label>
+        <input type="number" class="form-control" placeholder="Cân nặng" name="weight" value="" size="255" required autofocus  step="any" min=".4"/>
         <br/>
 
-        <label for="fname">Tên</label>
-        <input type="text" class="form-control" placeholder="Tên" name="fname" value="" size="255" required autofocus/>
+        <label for="piece">Số kiện: </label>
+        <input type="number" class="form-control" placeholder="Số kiện" name="piece" value="" size="255" required
+               autofocus min="1"/>
         <br/>
 
-        <label for="address1">Địa chỉ 1: </label>
-        <input type="text" class="form-control" placeholder="Địa chỉ 1" name="address1" value="" size="255" required
+        <label for="content">Chi tiết kiện hàng: </label>
+
+        <textarea class="form-control"  placeholder="Chi tiết kiện hàng" name="content" autofocus style="height:200px"> </textarea>
+        <br/>
+
+        <label for="value">Giá trị kiện hàng: </label>
+        <input type="text" class="form-control" placeholder="Giá trị kiện hàng" name="value" value="" size="255" required
                autofocus/>
         <br/>
 
-        <label for="address2">Địa chỉ 2: </label>
-        <input type="text" class="form-control" placeholder="Địa chỉ 2" name="address2" value="" size="255" autofocus/>
-        <br/>
 
-        <label for="quan_huyen">Quận/ Huyện: </label>
-        <input type="text" class="form-control" placeholder="Quận/ Huyện" name="quan_huyen" value="" size="255" required
+        <label for="insurance">Mua bảo hiểm: </label>
+         <input type="number" class="form-control" placeholder="Mua bảo hiểm" name="insurance" value="" size="255" required
                autofocus/>
         <br/>
 
-
-        <label for="tinh_thanhpho">Tỉnh/ Thành Phố: </label>
-        <br/>
-        {{ form.tinh_thanhpho }}
-        <br/>
-
-        <label for="phone1">Điện Thoại 1: </label>
-        <input type="number" class="form-control" placeholder="Điện Thoại" name="phone1" value="" size="100" required
+        <label for="tax">Phụ phí: </label>
+        <input type="number" class="form-control" placeholder="Phụ phí" name="tax" value="" size="100" required
                autofocus/>
         <br/>
 
-        <label for="phone2">Điện Thoại 2: </label>
-        <input type="number" class="form-control" placeholder="Điện Thoại" name="phone2" value="" size="100" autofocus/>
-        <br/>
-
-        <label for="email">Email: </label>
-        <input type="email" class="form-control" placeholder="email" name="email" email="" size="100" autofocus/>
-        <br/>
 
 
         <input type="submit" class="btn btn-primary" value="Submit"/>

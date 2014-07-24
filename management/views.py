@@ -40,39 +40,32 @@ def logout_view(request):
     logout(request)
     return redirect('/management/')
 
-def add_package(request):
-    if request.method == 'POST':
-        sender_form = SenderForm(data=request.POST)
-        receiver_form = ReceiverForm(data=request.POST)
-        # package_form = PackageForm(data=request.POST)
 
-        if sender_form.is_valid() and receiver_form.is_valid():
-        # if sender_form.is_valid() and receiver_form.is_valid() and package_form.is_valid():
-            allforms = [sender_form, receiver_form]
-            allforms = [sender_form, receiver_form, package_form]
+def add_package(request, sender_url, receiver_url):
+    context = RequestContext(request)
+    context_dict={}
+    sender = str(sender_url)
 
-            for allform in allform:
-                allform.save(commit=False)
-                # allform.instance.package = package
-                allform.save()
-            url = urlresolvers.reverse('management/')
-            return redirect(url)
+    if request.method =='POST':
+        form = PackageForm(request.POST)
+        if form.is_valid():
+            added = form.save(commit=False)
+            added.sender = Sender.objects.get(phone__iexact = sender)
+            added.receiver= Receiver.objects.get(phone1__iexact=receiver_url)
+            added = form.save(commit=True)
+
+            return HttpResponseRedirect(reverse('detail_package', args=(sender_url, receiver_url, added.id)))
+        else:
+            print form.errors
     else:
-        sender_form = SenderForm()
-        receiver_form = ReceiverForm()
-        # package_form = PackageForm()
+        form = PackageForm()
 
-    context = RequestContext(request, locals())
-    return render_to_response('management/add_package.html', context)
+    context_dict['sender_url']=sender_url
+    context_dict['receiver_url']=receiver_url
+    context_dict['form']= form
+    return render_to_response('management/add_package.html',context_dict,context)
 
-# def add_package(request):
-#     context = RequestContext(request)
-#     context_dict={}
-#     senderform =add_sender(request)
-#     context_dict['sender'] = senderform
-#     receiverform = add_receiver(request)
-#     context_dict['receiverform']= receiverform
-#     return render_to_response('management/add_package.html',context_dict,context)
+
 
 def add_sender(request):
     context = RequestContext(request)
@@ -98,7 +91,7 @@ def add_receiver(request,sender_url):
         form = ReceiverForm(request.POST)
         if form.is_valid():
             added = form.save(commit=True)
-            return HttpResponseRedirect(reverse('detail_receiver', args=(added.phone1,)))
+            return HttpResponseRedirect(reverse('detail_receiver', args=(sender_url, added.phone1,)))
         else:
             print form.errors
     else:
@@ -153,3 +146,30 @@ def encode_url(stri):
 
 def decode_url(stri):
     return stri.replace('_', ' ')
+
+def detail_package(request,sender_url, receiver_url, package_url):
+    context = RequestContext(request)
+    context_dict={}
+
+    try:
+        sender = Sender.objects.get(phone__iexact=sender_url)
+        context_dict['sender'] = sender
+        context_dict['sender_url'] = sender.phone
+
+        receiver = Receiver.objects.get(phone1__iexact=receiver_url)
+        context_dict['receiver'] =receiver
+        context_dict['receiver_url'] = receiver.phone1
+
+        package = Package.objects.get(id__iexact=package_url)
+        context_dict['package'] =package
+        context_dict['package_url'] = package.id
+
+    except Receiver.DoesNotExist:
+        pass
+    if request.method =='POST':
+        query =request.POST.get('query')
+        if query:
+            query = query.strip()
+            result_list = run_query(query)
+            context_dict['result_list']=result_list
+    return render_to_response('management/detail_package.html',context_dict, context)

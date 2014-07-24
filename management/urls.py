@@ -11,6 +11,8 @@ urlpatterns = patterns('',
     url(r'^sender/(?P<sender_url>\w+)/add_receiver/$', views.add_receiver, name='add_receiver'),
     url(r'^sender/(?P<sender_url>\w+)/$', views.detail_sender, name='detail_sender'),
     url(r'^sender/(?P<sender_url>\w+)/receiver/(?P<receiver_url>\w+)/$', views.detail_receiver, name='detail_receiver'),
+    url(r'^sender/(?P<sender_url>\w+)/receiver/(?P<receiver_url>\w+)/add_package/$', views.add_package, name='add_package'),
+    url(r'^sender/(?P<sender_url>\w+)/receiver/(?P<receiver_url>\w+)/package/(?P<package_url>\w+)/$', views.detail_package, name='detail_package'),
     url(r'^logout/$',views.logout_view,name='logout'),
     url(r'^login/$',views.login_view,name='login'),
     )

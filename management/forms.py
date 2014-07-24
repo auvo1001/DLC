@@ -9,6 +9,9 @@ class PackageForm(forms.ModelForm):
 
     class Meta:
         model = Package
+        exclude =['receiver','sender']
+
+
 
 class SenderForm(forms.ModelForm):
 
