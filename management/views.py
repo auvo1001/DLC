@@ -5,7 +5,7 @@ from django.template import RequestContext
 from django.views.generic.detail import DetailView
 from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required
-from management.forms import SenderForm, ReceiverForm, PackageForm, StoreForm
+from management.forms import SenderCreateForm, ReceiverCreateForm, PackageCreateForm, StoreForm
 from management.models import Sender, Receiver, Package, Store
 
 def index(request):
@@ -40,14 +40,14 @@ def logout_view(request):
     logout(request)
     return redirect('/management/')
 
-
+@login_required
 def add_package(request, sender_url, receiver_url):
     context = RequestContext(request)
     context_dict={}
     sender = str(sender_url)
 
     if request.method =='POST':
-        form = PackageForm(request.POST)
+        form = PackageCreateForm(request.POST)
         if form.is_valid():
             added = form.save(commit=False)
             added.sender = Sender.objects.get(phone__iexact = sender)
@@ -58,7 +58,7 @@ def add_package(request, sender_url, receiver_url):
         else:
             print form.errors
     else:
-        form = PackageForm()
+        form = PackageCreateForm()
 
     context_dict['sender_url']=sender_url
     context_dict['receiver_url']=receiver_url
@@ -66,12 +66,12 @@ def add_package(request, sender_url, receiver_url):
     return render_to_response('management/add_package.html',context_dict,context)
 
 
-
+@login_required
 def add_sender(request):
     context = RequestContext(request)
     context_dict={}
     if request.method =='POST':
-        form = SenderForm(request.POST)
+        form = SenderCreateForm(request.POST)
         if form.is_valid():
             added = form.save(commit=True)
             return HttpResponseRedirect(reverse('detail_sender', args=(added.phone,)))
@@ -79,26 +79,28 @@ def add_sender(request):
         else:
             print form.errors
     else:
-        form = SenderForm
+        form = SenderCreateForm()
         context_dict['form']=form
     return render_to_response('management/add_sender.html',context_dict,context)
 
+@login_required
 def add_receiver(request,sender_url):
     context = RequestContext(request)
     context_dict={}
     context_dict['sender_url']=sender_url
     if request.method =='POST':
-        form = ReceiverForm(request.POST)
+        form = ReceiverCreateForm(request.POST)
         if form.is_valid():
             added = form.save(commit=True)
             return HttpResponseRedirect(reverse('detail_receiver', args=(sender_url, added.phone1,)))
         else:
             print form.errors
     else:
-        form = ReceiverForm()
+        form = ReceiverCreateForm()
         context_dict['form']= form
     return render_to_response('management/add_receiver.html',context_dict,context)
 
+@login_required
 def detail_sender(request,sender_url):
     context = RequestContext(request)
     context_dict={}
@@ -118,6 +120,7 @@ def detail_sender(request,sender_url):
             context_dict['result_list']=result_list
     return render_to_response('management/detail_sender.html',context_dict, context)
 
+@login_required
 def detail_receiver(request,sender_url,receiver_url):
     context = RequestContext(request)
     context_dict={}
@@ -147,6 +150,7 @@ def encode_url(stri):
 def decode_url(stri):
     return stri.replace('_', ' ')
 
+@login_required
 def detail_package(request,sender_url, receiver_url, package_url):
     context = RequestContext(request)
     context_dict={}
@@ -163,6 +167,7 @@ def detail_package(request,sender_url, receiver_url, package_url):
         package = Package.objects.get(id__iexact=package_url)
         context_dict['package'] =package
         context_dict['package_url'] = package.id
+        context_dict['subtotal'] = package.subtotal()
 
     except Receiver.DoesNotExist:
         pass

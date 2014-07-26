@@ -7,14 +7,11 @@
     <h1>Chi Tiết Kiện Hàng</h1>
 
     <form action="" role="form" method="post">{% csrf_token %}
-{{sender}}
-      {% for hidden in form.hidden_fields %}
-                {{ hidden }}
-            {% endfor %}
-        <!--<input name="sender" />-->
-        <!--<input name="receiver" />-->
-        <!--{{form.sender}}-->
-        <!--{{form.receiver}}-->
+         {% for choice in form.type_field %}
+             {{ choice.choice_label }}
+             <span class="radio">{{ choice.tag }}</span>
+       {% endfor %}
+
 
         <label for="weight">Cân nặng: </label>
         <input type="number" class="form-control" placeholder="Cân nặng" name="weight" value="" size="255" required autofocus  step="any" min=".4"/>
@@ -36,17 +33,22 @@
         <br/>
 
 
-        <label for="insurance">Mua bảo hiểm: </label>
-         <input type="number" class="form-control" placeholder="Mua bảo hiểm" name="insurance" value="" size="255" required
-               autofocus/>
-        <br/>
 
-        <label for="tax">Phụ phí: </label>
-        <input type="number" class="form-control" placeholder="Phụ phí" name="tax" value="" size="100" required
+        <label for="extra_charge">Phụ phí: </label>
+        <input type="number" class="form-control" placeholder="Phụ phí" name="extra_charge" value="0" size="100"
                autofocus/>
         <br/>
 
 
+        <label for="receiver2">Họ Tên Người Nhận Thế: </label>
+        <input type="text" class="form-control" placeholder="Họ Tên Người Nhận Thế" name="receiver2" value="" size="100"
+               autofocus/>
+        <br/>
+
+        <label for="phone2">Phone Người Nhận Thế: </label>
+        <input type="number" class="form-control" placeholder="Phone Người Nhận Thế" name="phone2" value="" size="100"
+               autofocus/>
+        <br/>
 
         <input type="submit" class="btn btn-primary" value="Submit"/>
     </form>

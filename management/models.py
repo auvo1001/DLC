@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
 from django.utils.encoding import iri_to_uri
 from django.utils.http import urlquote
-
+from decimal import Decimal
 
 # Create your models here.
 class Tinh(models.Model):
@@ -48,34 +48,64 @@ class Receiver(models.Model):
         return self.phone1
 
 class Package(models.Model):
-    # tracking = models.CharField(max_length=255)
     sender = models.ForeignKey(Sender)
     receiver = models.ForeignKey(Receiver)
-    weight = models.DecimalField(max_digits= 5, decimal_places=2)
+    weight = models.DecimalField(max_digits= 10, decimal_places=2)
     piece = models.IntegerField()
     content = models.TextField()
-    value = models.DecimalField(max_digits= 5, decimal_places=2, null=True, blank=True)
-    insurance = models.DecimalField(max_digits= 5, decimal_places=2, null=True, blank=True)
-    tax = models.DecimalField(max_digits= 5, decimal_places=2, null=True, blank=True)
-    extra_charge = models.DecimalField(max_digits= 5, decimal_places=2, null=True, blank=True)
-    # price = models.IntegerField()
+    value = models.DecimalField(max_digits= 10, decimal_places=2) #not used
+    insurance = models.DecimalField(max_digits= 10, decimal_places=2, default=0) #not used
+    tax = models.DecimalField(max_digits= 10, decimal_places=2,  default=0) #not used
+    extra_charge = models.DecimalField(max_digits= 10, decimal_places=2,  default=0)
     added = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
-    status = models.CharField(max_length=50,blank=True) #bat dau, tren may bay, den Hai Quan VN, da giao hang
-    sender2 = models.CharField(max_length=255,blank=True)
+    receiver2 = models.CharField(max_length=255,blank=True)
     phone2 = models.CharField(max_length=50,blank=True)
-    #upload file?
+    receipt_signature = models.FileField(upload_to='receipt_signature/%Y/%m/%d', max_length=100, blank=True)
 
-    # def get_rate(self):
-    #     price_type = Receiver.objects.get(phone1=package.receiver.phone1).price_type
-    #     if price_type == 1:
-    #         return 3
-    #     else price_type == 2:
-    #         return 4
+    #tracking choices
+    bat_dau = "bat dau"
+    tren_may_bay = "tren may bay"
+    den_Hai_Quan_VN = "den Hai Quan VN"
+    da_giao_hang= "da giao hang"
+    status_choices = (
+        (bat_dau,  "bat dau"),
+        (tren_may_bay, "tren may bay"),
+        (den_Hai_Quan_VN, "den Hai Quan VN"),
+        (da_giao_hang, "da giao hang"),
+                    )
+    status = models.CharField(max_length=50, choices = status_choices, default = bat_dau ) #bat dau, tren may bay, den Hai Quan VN, da giao hang
 
-    # def get_price(self):
-    #     price  = weight * rate + insurance + tax + extra_charge
-    #     return price
+    #type
+    to_air = "Air To Air"
+    to_door = "Door To Door"
+    type_choices = (
+        (to_air, "Air To Air"),
+        (to_door,"Door To Door"),
+                    )
+    type_field = models.CharField(max_length=100, choices = type_choices, default = to_door )
+
+    def is_delivered(self):
+        return self.status in (self.da_giao_hang)
+
+    def get_rate(self):
+        if self.type_field == self.to_door:
+            price_type = Tinh.objects.get(name = self.receiver.tinh_thanhpho).price_type
+            if self.weight <=5:
+                return Decimal(price_type) * 5
+            elif self.weight > 5 and self.weight <10:
+                return self.weight * price_type
+            elif self.weight >= 10 and self.weight <30:
+                return self.weight * ( Decimal(price_type) - Decimal(0.25))
+            elif self.weight >= 30:
+                return self.weight * ( Decimal(price_type) - Decimal(0.5))
+        elif self.type == self.to_air:
+            return 1.20
+
+    def subtotal(self):
+        return self.get_rate() + self.extra_charge + self.tax + self.insurance
+
+
     def get_absolute_url(self):
         return self.id
 
