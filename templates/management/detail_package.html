@@ -1,7 +1,11 @@
 {% extends 'management/base.html' %}
 
-{% block title %} Kien Hang Tracking: {{package.id}} {% endblock %}
+{% block title %} Kiện Hàng Tracking: {{package.id}} {% endblock %}
 {%block content %}
+<div class="the_button">
+ <a  class="btn btn-primary btn-lg" role="button" href="/management/sender/{{sender_url}}/receiver/{{receiver_url}}/package/edit_package/{{package_url}}">Sửa Kiện Hàng </a>
+</div>
+<div class="clearfix visible-xs"></div>
 {% include 'management/detail_sender_code.html' %}
   {% include 'management/detail_receiver_code.html' %}
 {% include 'management/detail_package_code.html' %}

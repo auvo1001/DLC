@@ -3,21 +3,21 @@ from django.contrib.admin import widgets
 from management.models import Package, Sender, Receiver, Store, User
 from django.contrib.auth.models import User
 from functools import partial
-from django.views.generic.edit import UpdateView
 
 class PackageCreateForm(forms.ModelForm):
     type_choices = [('Door To Door', 'Door To Door',), ('Air To Air', 'Air To Air',)]
-    type_field = forms.ChoiceField(widget=forms.RadioSelect(), choices=type_choices)
+    p_type_field = forms.CharField(widget=forms.RadioSelect(choices=type_choices), initial = 'Door To Door')
+
 
     class Meta:
         model = Package
-        exclude =['receiver','sender','status','insurance','tax']
+        exclude =['p_receiver','p_sender','p_status','p_insurance','p_tax']
 
 class PackageStatusUpdateForm(forms.ModelForm):
 
     class Meta:
         model = Package
-        exclude =['receiver','sender']
+        exclude =['p_receiver','p_sender']
 
 
 class SenderCreateForm(forms.ModelForm):

@@ -1,0 +1,58 @@
+{% extends 'management/base.html' %}{% load static %}
+
+{% block title %}Người Nhận{% endblock %}
+{%block content %}
+
+<div class="jumbotrona">
+
+    <h1>Người Nhận</h1>
+
+    <form action="" role="form" method="post">{% csrf_token %}
+
+
+        <label for="r_lname">Họ </label>
+        <input type="text" class="form-control" placeholder="Họ" name="r_lname" value="{{receiver.r_lname}}" size="255" required autofocus/>
+        <br/>
+
+        <label for="r_fname">Tên</label>
+        <input type="text" class="form-control" placeholder="Tên" name="r_fname" value="{{receiver.r_fname}}" size="255" required autofocus/>
+        <br/>
+
+        <label for="r_address1">Địa chỉ 1: </label>
+        <input type="text" class="form-control" placeholder="Địa chỉ 1" name="r_address1" value="{{receiver.r_address1}}" size="255" required
+               autofocus/>
+        <br/>
+
+        <label for="r_address2">Địa chỉ 2: </label>
+        <input type="text" class="form-control" placeholder="Địa chỉ 2" name="r_address2" value="{{receiver.r_address2}}" size="255" autofocus/>
+        <br/>
+
+        <label for="r_quan_huyen">Quận/ Huyện: </label>
+        <input type="text" class="form-control" placeholder="Quận/ Huyện" name="r_quan_huyen" value="{{receiver.r_quan_huyen}}" size="255" required
+               autofocus/>
+        <br/>
+
+
+        <label for="r_tinh_thanhpho">Tỉnh/ Thành Phố: </label>
+        <br/>
+        {{ form.r_tinh_thanhpho }}
+        <br/>
+
+        <label for="r_phone1">Điện Thoại 1: </label>
+        <input type="number" class="form-control" placeholder="Điện Thoại" name="r_phone1" value="{{receiver.r_phone1}}" size="100" required
+               autofocus/>
+        <br/>
+
+        <label for="r_phone2">Điện Thoại 2: </label>
+        <input type="number" class="form-control" placeholder="Điện Thoại" name="r_phone2" value="{{receiver.r_phone2}}" size="100" autofocus/>
+        <br/>
+
+        <label for="r_email">Email: </label>
+        <input type="email" class="form-control" placeholder="email" name="r_email" email="{{receiver.r_email}}" size="100" autofocus/>
+        <br/>
+
+
+        <input type="submit" class="btn btn-primary" value="Submit"/>
+    </form>
+</div>
+{% endblock %}

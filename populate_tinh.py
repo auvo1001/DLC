@@ -75,7 +75,7 @@ def populate():
 
 
 def add_tinh(name,region,price_type):
-    c = Tinh.objects.get_or_create(name=name,region=region,price_type=price_type)[0]
+    c = Tinh.objects.get_or_create(t_name=name,t_region=region,t_price_type=price_type)[0]
     return c
 
 if __name__ =='__main__':

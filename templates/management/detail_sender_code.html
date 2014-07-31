@@ -1,7 +1,7 @@
       <div class="col-md-6">
             <div class="profile">
-                <h1>Người gửi: {{sender.lname}} {{sender.fname}}</h1>
-                <h1>Phone: {{sender.phone}} </h1>
+                <h1>Người gửi: {{sender.s_lname}} {{sender.s_fname}}</h1>
+                <h1>Phone: {{sender.s_phone}} </h1>
                 <table class="table table-striped table-hover">
                     <tbody>
                     <!--<tr>-->
@@ -14,31 +14,33 @@
                     <!--</tr>-->
                     <tr>
                         <td>Địa chỉ 1</td>
-                        <td>{{sender.address1}}</td>
+                        <td>{{sender.s_address1}}</td>
                     </tr>
                     <tr>
                         <td>Địa chỉ 2</td>
-                        <td>{{sender.address2}}</td>
+                        <td>{{sender.s_address2}}</td>
                     </tr>
                     <tr>
                         <td>Thành Phố</td>
-                        <td>{{sender.city}}</td>
+                        <td>{{sender.s_city}}</td>
                     </tr>
                     <tr>
                         <td>Bang</td>
-                        <td>{{sender.state_province}}</td>
+                        <td>{{sender.s_state_province}}</td>
                     </tr>
                     <tr>
                         <td>zip</td>
-                        <td>{{sender.zip}}</td>
+                        <td>{{sender.s_zip}}</td>
                     </tr>
                     <tr>
                         <td>Phone</td>
-                        <td>{{sender.phone}}</td>
+                        <td>{{sender.s_phone}}</td>
                     </tr>
                     <tr>
                         <td>email</td>
-                        <td>{{sender.email}}</td>
+                        <td>{{sender.s_email}}</td>
+                    </tr>
+                    <tr> <td></td>
                     </tr>
                 </table>
             </div>

@@ -23,12 +23,18 @@ body {
 }
 
 .profile h1 {
-text-align: center;
+    text-align: center;
+}
+
+.radio_package {
+    width:400px;
+
 }
 
 .the_button {
-
-    margin:10px auto;
+    margin-left: auto;
+    margin-right: auto;
+    width : 15%;
 }
 
 

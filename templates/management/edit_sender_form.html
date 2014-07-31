@@ -1,0 +1,58 @@
+{% extends 'management/base.html' %}{% load static %}
+
+        {% block title %}Người gửi{% endblock %}
+         {%block content %}
+<div class="org">
+    <h1>Người gửi</h1>
+
+    <form action="" role="form" method="post">{% csrf_token %}
+
+
+        <label for="lname">Họ </label>
+        <input type="text" class="form-control" placeholder="Họ" name="s_lname" value="{{sender.s_lname}}" size="255" required autofocus/>
+        <br/>
+
+        <label for="fname">Tên</label>
+        <input type="text" class="form-control" placeholder="Tên" name="s_fname" value="{{sender.s_fname}}" size="255" required autofocus/>
+        <br/>
+
+        <label for="address1">Địa chỉ 1: </label>
+        <input type="text" class="form-control" placeholder="Địa chỉ 1" name="s_address1" value="{{sender.s_address1}}" size="255" required
+               autofocus/>
+        <br/>
+
+        <label for="address2">Địa chỉ 2: </label>
+        <input type="text" class="form-control" placeholder="Địa chỉ 2" name="s_address2" value="{{sender.s_address2}}" size="255" autofocus/>
+        <br/>
+
+        <label for="city">Thành Phố: </label>
+        <input type="text" class="form-control" placeholder="Thành Phố" name="s_city" value="{{sender.s_city}}" size="128" required
+               autofocus/>
+        <br/>
+
+        <label for="state_province">Bang: </label>
+        <input type="text" class="form-control" placeholder="Bang" name="s_state_province" value="{{sender.s_state_province}}" size="128" required
+               autofocus/>
+        <br/>
+
+        <label for="zip">Zip: </label>
+        <input type="text" class="form-control" placeholder="Zip" name="s_zip" value="{{sender.s_zip}}" size="100" required
+               autofocus/>
+        <br/>
+
+
+        <label for="phone">Điện Thoại: </label>
+        <input type="number" class="form-control" placeholder="Điện Thoại" name="s_phone" value="{{sender.s_phone}}" size="50" required
+               autofocus/>
+        <br/>
+
+        <label for="email">Email: </label>
+        <input type="email" class="form-control" placeholder="email" name="s_email" email="{{sender.s_email}}" size="100" autofocus/>
+        <br/>
+
+
+        <input type="submit" class="btn btn-primary" value="Submit"/>
+    </form>
+</div>
+        {% endblock %}
+

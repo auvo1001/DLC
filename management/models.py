@@ -7,61 +7,61 @@ from decimal import Decimal
 
 # Create your models here.
 class Tinh(models.Model):
-    name = models.CharField(max_length=255)
-    region = models.CharField(max_length=128)
-    price_type= models.IntegerField()
+    t_name = models.CharField(max_length=255)
+    t_region = models.CharField(max_length=128)
+    t_price_type= models.IntegerField()
     # 1 is SG, 2 is everything else
     def __unicode__(self):
-         return self.name
+         return self.t_name
 
 class Sender(models.Model):
-    fname = models.CharField(max_length=255)
-    lname = models.CharField(max_length=255)
-    address1 = models.CharField( max_length=255)
-    address2 = models.CharField( max_length=255, blank=True)
-    city = models.CharField( max_length=128)
-    state_province = models.CharField(max_length=255)
-    zip = models.CharField(max_length=100)
-    phone = models.CharField(max_length=50)
-    email = models.EmailField(max_length=100, blank=True)
-    added = models.DateTimeField(auto_now_add=True)
-    updated = models.DateTimeField(auto_now=True)
+    s_fname = models.CharField(max_length=255)
+    s_lname = models.CharField(max_length=255)
+    s_address1 = models.CharField( max_length=255)
+    s_address2 = models.CharField( max_length=255, blank=True)
+    s_city = models.CharField( max_length=128)
+    s_state_province = models.CharField(max_length=255)
+    s_zip = models.CharField(max_length=100)
+    s_phone = models.CharField(max_length=50)
+    s_email = models.EmailField(max_length=100, blank=True)
+    s_added = models.DateTimeField(auto_now_add=True)
+    s_updated = models.DateTimeField(auto_now=True)
 
     def __unicode__(self):
-        return self.phone
+        return self.s_phone
 
 
 class Receiver(models.Model):
-    fname = models.CharField(max_length=255)
-    lname = models.CharField(max_length=255)
-    address1 = models.CharField( max_length=255)
-    address2 = models.CharField( max_length=255, blank=True)
-    quan_huyen = models.CharField( max_length=255)
-    tinh_thanhpho = models.ForeignKey(Tinh)
-    phone1 = models.CharField(max_length=50)
-    phone2 = models.CharField(max_length=50, blank=True)
-    email = models.EmailField(max_length=100, blank=True)
-    added = models.DateTimeField(auto_now_add=True)
-    updated = models.DateTimeField(auto_now=True)
+    r_fname = models.CharField(max_length=255)
+    r_lname = models.CharField(max_length=255)
+    r_address1 = models.CharField( max_length=255)
+    r_address2 = models.CharField( max_length=255, blank=True)
+    r_quan_huyen = models.CharField( max_length=255)
+    r_tinh_thanhpho = models.ForeignKey(Tinh)
+    r_phone1 = models.CharField(max_length=50)
+    r_phone2 = models.CharField(max_length=50, blank=True)
+    r_email = models.EmailField(max_length=100, blank=True)
+    r_added = models.DateTimeField(auto_now_add=True)
+    r_updated = models.DateTimeField(auto_now=True)
 
     def __unicode__(self):
-        return self.phone1
+        return self.r_phone1
 
 class Package(models.Model):
-    sender = models.ForeignKey(Sender)
-    receiver = models.ForeignKey(Receiver)
-    weight = models.DecimalField(max_digits= 10, decimal_places=2)
-    piece = models.IntegerField()
-    content = models.TextField()
-    value = models.DecimalField(max_digits= 10, decimal_places=2) #not used
-    insurance = models.DecimalField(max_digits= 10, decimal_places=2, default=0) #not used
-    tax = models.DecimalField(max_digits= 10, decimal_places=2,  default=0) #not used
-    extra_charge = models.DecimalField(max_digits= 10, decimal_places=2,  default=0)
-    added = models.DateTimeField(auto_now_add=True)
-    updated = models.DateTimeField(auto_now=True)
-    receiver2 = models.CharField(max_length=255,blank=True)
-    phone2 = models.CharField(max_length=50,blank=True)
-    receipt_signature = models.FileField(upload_to='receipt_signature/%Y/%m/%d', max_length=100, blank=True)
+    p_sender = models.ForeignKey(Sender)
+    p_receiver = models.ForeignKey(Receiver)
+    p_weight = models.DecimalField(max_digits= 10, decimal_places=2)
+    p_piece = models.IntegerField()
+    p_content = models.TextField()
+    p_value = models.DecimalField(max_digits= 10, decimal_places=2) #not used
+    p_insurance = models.DecimalField(max_digits= 10, decimal_places=2, default=0) #not used
+    p_tax = models.DecimalField(max_digits= 10, decimal_places=2,  default=0) #not used
+    p_extra_charge = models.DecimalField(max_digits= 10, decimal_places=2,  default=0)
+    p_added = models.DateTimeField(auto_now_add=True)
+    p_updated = models.DateTimeField(auto_now=True)
+    p_receiver2 = models.CharField(max_length=255,blank=True)
+    p_phone2 = models.CharField(max_length=50,blank=True)
+    p_receipt_signature = models.FileField(upload_to='receipt_signature/%Y/%m/%d', max_length=100, blank=True)
 
     #tracking choices
     bat_dau = "bat dau"
@@ -74,7 +74,7 @@ class Package(models.Model):
         (den_Hai_Quan_VN, "den Hai Quan VN"),
         (da_giao_hang, "da giao hang"),
                     )
-    status = models.CharField(max_length=50, choices = status_choices, default = bat_dau ) #bat dau, tren may bay, den Hai Quan VN, da giao hang
+    p_status = models.CharField(max_length=50, choices = status_choices, default = bat_dau ) #bat dau, tren may bay, den Hai Quan VN, da giao hang
 
     #type
     to_air = "Air To Air"
@@ -83,27 +83,27 @@ class Package(models.Model):
         (to_air, "Air To Air"),
         (to_door,"Door To Door"),
                     )
-    type_field = models.CharField(max_length=100, choices = type_choices, default = to_door )
+    p_type_field = models.CharField(max_length=100, choices = type_choices, default = to_door )
 
     def is_delivered(self):
-        return self.status in (self.da_giao_hang)
+        return self.p_status in (self.da_giao_hang)
 
     def get_rate(self):
-        if self.type_field == self.to_door:
-            price_type = Tinh.objects.get(name = self.receiver.tinh_thanhpho).price_type
-            if self.weight <=5:
+        if self.p_type_field == self.to_door:
+            price_type = Tinh.objects.get(t_name = self.p_receiver.r_tinh_thanhpho).t_price_type
+            if self.p_weight <=5:
                 return Decimal(price_type) * 5
-            elif self.weight > 5 and self.weight <10:
-                return self.weight * price_type
-            elif self.weight >= 10 and self.weight <30:
-                return self.weight * ( Decimal(price_type) - Decimal(0.25))
-            elif self.weight >= 30:
-                return self.weight * ( Decimal(price_type) - Decimal(0.5))
-        elif self.type == self.to_air:
+            elif self.p_weight > 5 and self.p_weight <10:
+                return self.p_weight * price_type
+            elif self.p_weight >= 10 and self.p_weight <30:
+                return self.p_weight * ( Decimal(price_type) - Decimal(0.25))
+            elif self.p_weight >= 30:
+                return self.p_weight * ( Decimal(price_type) - Decimal(0.5))
+        elif self.p_type_field == self.to_air:
             return 1.20
 
     def subtotal(self):
-        return self.get_rate() + self.extra_charge + self.tax + self.insurance
+        return self.get_rate() + self.p_extra_charge + self.p_tax + self.p_insurance
 
 
     def get_absolute_url(self):
@@ -111,23 +111,23 @@ class Package(models.Model):
 
 
 class Store(models.Model):
-    name = models.CharField(max_length=255)
-    address1 = models.CharField( max_length=255)
-    address2 = models.CharField( max_length=255, blank=True)
-    city = models.CharField( max_length=128)
-    state_province = models.CharField(max_length=255)
-    zip = models.CharField(max_length=100)
-    added = models.DateTimeField(auto_now_add=True)
-    updated = models.DateTimeField(auto_now=True)
+    st_name = models.CharField(max_length=255)
+    st_address1 = models.CharField( max_length=255)
+    st_address2 = models.CharField( max_length=255, blank=True)
+    st_city = models.CharField( max_length=128)
+    st_state_province = models.CharField(max_length=255)
+    st_zip = models.CharField(max_length=100)
+    st_added = models.DateTimeField(auto_now_add=True)
+    st_updated = models.DateTimeField(auto_now=True)
 
     def __unicode__(self):
         return '%s %s' % (self.name, self.city)
 
 
 class User(models.Model):
-    user = models.OneToOneField(User)
-    added = models.DateTimeField(auto_now_add=True)
-    updated = models.DateTimeField(auto_now=True)
+    u_user = models.OneToOneField(User)
+    u_added = models.DateTimeField(auto_now_add=True)
+    u_updated = models.DateTimeField(auto_now=True)
 
     def __unicode__(self):
         return self.user.username
