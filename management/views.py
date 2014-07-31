@@ -6,7 +6,7 @@ from django.views.generic.detail import DetailView
 from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required
 from management.forms import SenderCreateForm, ReceiverCreateForm, PackageCreateForm, StoreForm
-from management.models import Sender, Receiver, Package, Store
+from management.models import Sender, Receiver, Package, Store, Tinh
 
 
 def index(request):
@@ -236,7 +236,7 @@ def edit_receiver(request , sender_url, receiver_url):
 
 def edit_package(request , sender_url, receiver_url, package_url):
     context=RequestContext(request)
-
+    tinh_list = get_tinh_list()
     sender = Sender.objects.get(s_phone__iexact = sender_url)
     receiver = Receiver.objects.get(r_phone1__iexact = receiver_url)
     package = Package.objects.get(id__iexact = package_url)
@@ -293,3 +293,16 @@ def decode_url(stri):
 def logout_view(request):
     logout(request)
     return redirect('/management/')
+
+
+def get_tinh_list(max_results=0, starts_with=''):
+        tinh_list=[]
+        if starts_with:
+            tinh_list = Tinh.objects.filter(name__istartswith=starts_with)
+        else:
+            tinh_list = Tinh.objects.all()
+
+        if max_results >0:
+            if len(tinh_list) >max_results:
+                tinh_list - tinh_list[:max_result]
+            return tinh_list

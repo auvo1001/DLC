@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.admin import widgets
-from management.models import Package, Sender, Receiver, Store, User
+from management.models import Package, Sender, Receiver, Store, User, Tinh
 from django.contrib.auth.models import User
 from functools import partial
 
@@ -27,6 +27,7 @@ class SenderCreateForm(forms.ModelForm):
 
 
 class ReceiverCreateForm(forms.ModelForm):
+    r_tinh_thanhpho = forms.ModelChoiceField(queryset=Tinh.objects.all().order_by('t_name'))
 
     class Meta:
         model = Receiver

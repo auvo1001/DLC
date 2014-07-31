@@ -72,7 +72,9 @@
 
         <label for="r_tinh_thanhpho">Tỉnh/ Thành Phố: </label>
         <br/>
-        <input type="text" class="form-control" name="r_tinh_thanhpho" value="{{receiver.r_tinh_thanhpho }}"/>
+        {% for choice in receiver_form.r_tinh_thanhpho %}
+                {{ choice}}
+        {% endfor %}
         <br/>
 
         <label for="r_phone1">Điện Thoại 1: </label>
