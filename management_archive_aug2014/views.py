@@ -39,7 +39,7 @@ def login_view(request):
         return render_to_response('management/login.html', {}, context)
 
 @login_required
-def add_package(request): # try to combine all
+def create_package(request): # try to combine all
     context = RequestContext(request)
     context_dict={}
     tinh_list = get_tinh_list()
@@ -47,32 +47,26 @@ def add_package(request): # try to combine all
         sender_form = SenderCreateForm(request.POST)
         receiver_form = ReceiverCreateForm(request.POST)
         package_form = PackageCreateForm(request.POST)
-
-
+        # verify later
         if sender_form.is_valid() and receiver_form.is_valid() and package_form.is_valid():
+        #     sender_added = sender_form.save(commit = False)
+        #     try:
+        #         obj = Sender.objects.get(s_phone__iexact = sender_form.s_phone)
+        #         for key, value in updated_values.iteritems():
+        #             setattr(obj, key, value)
+        #         obj.save()
+        #     except Sender.DoesNotExist:
+        #         updated_values.update(sender_form)
+        #         obj = Sender(**updated_values)
+        #         sender_added = obj.save(commit = True)
+            sender_added = sender_form.save(commit = True)
+            receiver_added = receiver_form.save(commit = True)
+            sender_url = sender_added.s_phone
+            receiver_url = receiver_added.r_phone1
+
             package_added = package_form.save(commit = False)
-            sender_form_phone = sender_form.cleaned_data['s_phone']
-            recevier_form_phone = receiver_form.cleaned_data['r_phone1']
-            if Sender.objects.get(s_phone__iexact = sender_form_phone):
-                sender = Sender.objects.select_for_update().get(s_phone__iexact=sender_form_phone)
-                sender_added = sender.save()
-                sender_url = sender.s_phone
-                package_added.p_sender = sender
-            else:
-                sender_added = sender_form.save(commit = True)
-                sender_url = sender_added.s_phone
-                package_added.p_sender = sender_added
-
-            if Receiver.objects.get(r_phone1__iexact = receiver_form_phone):
-                receiver = Receiver.objects.select_for_update().get(r_phone1__iexact=receiver_form_phone)
-                receiver_added = receiver.save()
-                receiver_url = receiver.s_phone
-                package_added.p_receiver = receiver
-            else:
-                receiver_added = receiver_form.save(commit = True)
-                receiver_url = receiver_added.r_phone1
-                package_added.p_receiver = receiver_added
-
+            package_added.p_sender = sender_added
+            package_added.p_receiver = receiver_added
             package_added = package_form.save(commit = True)
             package_url = package_added.id
 
@@ -89,7 +83,82 @@ def add_package(request): # try to combine all
     context_dict['sender_form']= sender_form
     context_dict['receiver_form'] = receiver_form
     context_dict['package_form'] = package_form
+    return render_to_response('management/create_package_form.html', context_dict, context)
+
+
+
+
+@login_required
+def add_sender(request):
+    context = RequestContext(request)
+    context_dict = {}
+    if request.method == 'POST':
+        form = SenderCreateForm(request.POST)
+        if form.is_valid():
+            added = form.save(commit=True)
+            sender_url = added.s_phone
+            return HttpResponseRedirect(reverse('detail_sender', args=(sender_url,)))
+
+        else:
+            print form.errors
+    else:
+        form = SenderCreateForm()
+        context_dict['form'] = form
+    return render_to_response('management/add_sender.html', context_dict, context)
+
+
+@login_required
+def add_receiver(request, sender_url):
+    context = RequestContext(request)
+    context_dict = {}
+    context_dict['sender_url'] = sender_url
+    if request.method == 'POST':
+        form = ReceiverCreateForm(request.POST)
+        if form.is_valid():
+            added = form.save(commit=True)
+            receiver_url = added.r_phone1
+            redirect_url = reverse('detail_receiver', args=(sender_url, receiver_url,))
+            return HttpResponseRedirect(redirect_url)
+        else:
+            print form.errors
+    else:
+        form = ReceiverCreateForm()
+        context_dict['form'] = form
+    return render_to_response('management/add_receiver.html', context_dict, context)
+
+
+@login_required
+def add_package(request, sender_url, receiver_url):
+    context = RequestContext(request)
+    context_dict = {}
+    context_dict['sender_url'] = sender_url
+    context_dict['receiver_url'] = receiver_url
+
+    if request.method == 'POST':
+        form = PackageCreateForm(request.POST)
+        if form.is_valid():
+            added = form.save(commit=False)
+            added.p_sender = Sender.objects.get(s_phone__iexact=sender_url)
+            added.p_receiver = Receiver.objects.get(r_phone1__iexact=receiver_url)
+            added = form.save(commit=True)
+            package_url = added.id
+            redirect_url = reverse('detail_package', args=(sender_url, receiver_url, package_url,))
+
+            return HttpResponseRedirect(redirect_url)
+        else:
+            print form.errors
+    else:
+        form = PackageCreateForm()
+
+    context_dict['sender_url'] = sender_url
+    context_dict['receiver_url'] = receiver_url
+    context_dict['form'] = form
     return render_to_response('management/add_package.html', context_dict, context)
+
+    def get_initial(self):
+        super(PackageCreateForm, self).get_initial()
+        self.p_type_field = {"Door To Door": "Door To Door"}
+        return self.p_type_field
 
 
 @login_required

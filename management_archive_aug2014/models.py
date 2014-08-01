@@ -100,16 +100,11 @@ class Package(models.Model):
             elif self.p_weight >= 30:
                 return self.p_weight * ( Decimal(price_type) - Decimal(0.5))
         elif self.p_type_field == self.to_air:
-            if self.p_weight <=20:
-                return 20 * 1.20
-            else:
-                return p_weight * 1.20
+            return 1.20
 
     def subtotal(self):
-        return Decimal(self.get_rate()) + self.p_extra_charge + self.p_tax + self.p_insurance
+        return self.get_rate() + self.p_extra_charge + self.p_tax + self.p_insurance
 
-    def __unicode__(self):
-        return str(self.id)
 
     def get_absolute_url(self):
         return self.id

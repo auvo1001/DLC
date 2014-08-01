@@ -1,0 +1,13 @@
+{% extends 'management/base.html' %}
+
+{% block title %}  Người gửi {{sender.s_lname}} {{sender.s_fname}} {% endblock %}
+
+    {%block content %}
+<div class="the_button">
+     <a class="btn btn-success btn-lg" role="button" href="/management/sender/{{sender_url}}/add_receiver/">Thêm Người Nhận</a>
+    <a class="btn btn-primary btn-lg" role="button" href="/management/sender/edit_sender/{{sender_url}}/">Sửa Người Gửi </a>
+</div>
+         <div class="clearfix visible-xs"></div>
+     {% include 'management/detail_sender_code.html' %}
+
+{% endblock %}

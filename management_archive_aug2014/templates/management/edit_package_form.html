@@ -1,0 +1,143 @@
+{% extends 'management/base.html' %}{% load static %}
+
+{% block title %}Chi Tiết Kiện Hàng{% endblock %}
+{%block content %}
+<div class="jumbotrona">
+
+    <form action="" role="form" method="post">{% csrf_token %}
+        <label for="s_lname">Họ </label>
+        <input type="text" class="form-control" name="s_lname" value="{{sender.s_lname}}" size="255" required autofocus/>
+        <br/>
+
+        <label for="s_fname">Tên</label>
+        <input type="text" class="form-control" name="s_fname" value="{{sender.s_fname}}" size="255" required autofocus/>
+        <br/>
+
+        <label for="s_address1">Địa chỉ 1: </label>
+        <input type="text" class="form-control"  name="s_address1" value="{{sender.s_address1}}" size="255" required
+               autofocus/>
+        <br/>
+
+        <label for="s_address2">Địa chỉ 2: </label>
+        <input type="text" class="form-control" name="s_address2" value="{{sender.s_address2}}" size="255" autofocus/>
+        <br/>
+
+        <label for="s_city">Thành Phố: </label>
+        <input type="text" class="form-control"  name="s_city" value="{{sender.s_city}}" size="128" required
+               autofocus/>
+        <br/>
+
+        <label for="s_state_province">Bang: </label>
+        <input type="text" class="form-control" name="s_state_province" value="{{sender.s_state_province}}" size="128" required
+               autofocus/>
+        <br/>
+
+        <label for="s_zip">Zip: </label>
+        <input type="text" class="form-control" name="s_zip" value="{{sender.s_zip}}" size="100" required
+               autofocus/>
+        <br/>
+
+
+        <label for="s_phone">Điện Thoại: </label>
+        <input type="number" class="form-control" name="s_phone" value="{{sender.s_phone}}" size="50" required
+               autofocus/>
+        <br/>
+
+        <label for="s_email">Email: </label>
+        <input type="email" class="form-control" name="s_email" email="{{sender.s_email}}" size="100" autofocus/>
+        <br/>
+
+        <label for="r_lname">Họ </label>
+        <input type="text" class="form-control"  name="r_lname" value="{{receiver.r_lname}}" size="255" required autofocus/>
+        <br/>
+
+        <label for="r_fname">Tên</label>
+        <input type="text" class="form-control"  name="r_fname" value="{{receiver.r_fname}}" size="255" required autofocus/>
+        <br/>
+
+        <label for="r_address1">Địa chỉ 1: </label>
+        <input type="text" class="form-control" name="r_address1" value="{{receiver.r_address1}}" size="255" required
+               autofocus/>
+        <br/>
+
+        <label for="r_address2">Địa chỉ 2: </label>
+        <input type="text" class="form-control" name="r_address2" value="{{receiver.r_address2}}" size="255" autofocus/>
+        <br/>
+
+        <label for="r_quan_huyen">Quận/ Huyện: </label>
+        <input type="text" class="form-control" name="r_quan_huyen" value="{{receiver.r_quan_huyen}}" size="255" required
+               autofocus/>
+        <br/>
+
+
+        <label for="r_tinh_thanhpho">Tỉnh/ Thành Phố: </label>
+        <br/>
+        {% for choice in receiver_form.r_tinh_thanhpho %}
+                {{ choice}}
+        {% endfor %}
+        <br/>
+
+        <label for="r_phone1">Điện Thoại 1: </label>
+        <input type="number" class="form-control" name="r_phone1" value="{{receiver.r_phone1}}" size="100" required
+               autofocus/>
+        <br/>
+
+        <label for="r_phone2">Điện Thoại 2: </label>
+        <input type="number" class="form-control" name="receiver.r_phone2" value="{{receiver.r_phone2}}" size="100" autofocus/>
+        <br/>
+
+        <label for="r_email">Email: </label>
+        <input type="email" class="form-control" name="r_email" email="{{receiver.r_email}}" size="100" autofocus/>
+        <br/>
+        <div class="row">
+            <div class="col-xs-6 col-sm-6"><h1>Chi Tiết Kiện Hàng</h1></div>
+            <div class="col-xs-6 col-sm-6"> {% for choice in package_form.p_type_field %}
+                {{ choice.choice_label }} {{ choice.tag }}
+                {% endfor %}
+            </div>
+            <div class="clearfix visible-xs-block"></div>
+            <label for="p_weight">Cân nặng: </label>
+            <input type="number" class="form-control"  name="p_weight" value="{{package.p_weight}}" size="255" required
+                   autofocus step="any" min=".4"/>
+            <br/>
+
+            <label for="p_piece">Số kiện: </label>
+            <input type="number" class="form-control" name="p_piece" value="{{package.p_piece}}" size="255" required
+                   autofocus/>
+            <br/>
+
+            <label for="p_content">Chi tiết kiện hàng: </label>
+
+           <input type="textarea" class="form-control" name="p_content" autofocus value="{{package.p_content}}"
+                      style="height:200px" />
+            <br/>
+
+            <label for="p_value">Giá trị kiện hàng: </label>
+            <input type="text" class="form-control"  name="p_value" value="{{package.p_value}}" size="255"
+                   required
+                   autofocus/>
+            <br/>
+
+
+            <label for="p_extra_charge">Phụ phí: </label>
+            <input type="number" class="form-control" name="p_extra_charge" value="{{package.p_extra_charge}}" size="100"
+                   autofocus/>
+            <br/>
+
+
+            <label for="p_receiver2">Họ Tên Người Nhận Thế: </label>
+            <input type="text" class="form-control" name="p_receiver2" value="{{package.p_receiver2}}"
+                   size="100"
+                   autofocus/>
+            <br/>
+
+            <label for="p_phone2">Phone Người Nhận Thế: </label>
+            <input type="number" class="form-control"  name="package.p_phone2" value="{{package.phone2}}"
+                   size="100"
+                   autofocus/>
+            <br/>
+
+            <input type="submit" class="btn btn-primary" value="Submit"/>
+    </form>
+</div>
+{% endblock %}

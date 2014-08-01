@@ -9,52 +9,52 @@
             <div class="profile">
                 <h1>Người gửi</h1>
                 <label for="s_lname">Họ </label>
-                <input type="text" class="form-control" placeholder="Họ" name="s_lname" value="{{s_lname}}" size="255" required
+                <input type="text" class="form-control" placeholder="Họ" name="s_lname" value="" size="255" required
                        autofocus/>
                 <br/>
 
                 <label for="s_fname">Tên</label>
-                <input type="text" class="form-control" placeholder="Tên" name="s_fname" value="{{s_fname}}" size="255" required
+                <input type="text" class="form-control" placeholder="Tên" name="s_fname" value="" size="255" required
                        autofocus/>
                 <br/>
 
                 <label for="s_address1">Địa chỉ 1: </label>
-                <input type="text" class="form-control" placeholder="Địa chỉ 1" name="s_address1" value="{{s_address1}}" size="255"
+                <input type="text" class="form-control" placeholder="Địa chỉ 1" name="s_address1" value="" size="255"
                        required
                        autofocus/>
                 <br/>
 
                 <label for="s_address2">Địa chỉ 2: </label>
-                <input type="text" class="form-control" name="s_address2" placeholder="Địa chỉ 2" value="{{s_address2}}" size="255"
+                <input type="text" class="form-control" name="s_address2" placeholder="Địa chỉ 2" value="" size="255"
                        autofocus/>
                 <br/>
 
                 <label for="s_city">Thành Phố: </label>
-                <input type="text" class="form-control" name="s_city" placeholder="Thành Phố" value="{{s_city}}" size="128"
+                <input type="text" class="form-control" name="s_city" placeholder="Thành Phố" value="" size="128"
                        required
                        autofocus/>
                 <br/>
 
                 <label for="s_state_province">Bang: </label>
-                <input type="text" class="form-control" name="s_state_province" placeholder="Bang" value="{{s_state}}" size="128"
+                <input type="text" class="form-control" name="s_state_province" placeholder="Bang" value="" size="128"
                        required
                        autofocus/>
                 <br/>
 
                 <label for="s_zip">Zip: </label>
-                <input type="text" class="form-control" name="s_zip" placeholder="Zip" value="{{s_zip}}" size="100" required
+                <input type="text" class="form-control" name="s_zip" placeholder="Zip" value="" size="100" required
                        autofocus/>
                 <br/>
 
 
                 <label for="s_phone">Điện Thoại: </label>
-                <input type="number" class="form-control" name="s_phone" placeholder="Điện Thoại" value="{{s_phone}}" size="50"
+                <input type="number" class="form-control" name="s_phone" placeholder="Điện Thoại" value="" size="50"
                        required
                        autofocus/>
                 <br/>
 
                 <label for="s_email">Email: </label>
-                <input type="email" class="form-control" name="s_email" placeholder="Email" email="{{s_email}}" size="100"
+                <input type="email" class="form-control" name="s_email" placeholder="Email" email="" size="100"
                        autofocus/>
                 <br/>
             </div>
@@ -115,12 +115,11 @@
                 <br/>
             </div>
         </div>
-         <div class="clearfix visible-xs-block"></div>
         <div class="profile">
             <div class="row">
                 <div class="col-xs-6 col-sm-6"><h1>Chi Tiết Kiện Hàng</h1></div>
                 <div class="col-xs-6 col-sm-6"> {% for choice in package_form.p_type_field %}
-                 {{ choice.choice_label }} {{ choice.tag }}
+                    {{ choice.choice_label }} {{ choice.tag }}
                     {% endfor %}
                 </div>
                 <div class="clearfix visible-xs-block"></div>

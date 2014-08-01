@@ -1,0 +1,59 @@
+{% extends 'management/base.html' %}{% load static %}
+
+{% block title %}Chi Tiết Kiện Hàng{% endblock %}
+{%block content %}
+<div class="jumbotrona">
+
+    <form action="" role="form" method="post">{% csrf_token %}
+        <div class="row">
+            <div class="col-xs-6 col-sm-6"><h1>Chi Tiết Kiện Hàng</h1></div>
+            <div class="col-xs-6 col-sm-6"> {% for choice in form.p_type_field %}
+                {{ choice.choice_label }} {{ choice.tag }}
+                {% endfor %}
+            </div>
+            <div class="clearfix visible-xs-block"></div>
+            <label for="p_weight">Cân nặng: </label>
+            <input type="number" class="form-control" placeholder="Cân nặng" name="p_weight" value="" size="255" required
+                   autofocus step="any" min=".4"/>
+            <br/>
+
+            <label for="p_piece">Số kiện: </label>
+            <input type="number" class="form-control" placeholder="Số kiện" name="p_piece" value="" size="255" required
+                   autofocus min="1"/>
+            <br/>
+
+            <label for="p_content">Chi tiết kiện hàng: </label>
+
+            <textarea class="form-control" placeholder="Chi tiết kiện hàng" name="p_content" autofocus
+                      style="height:200px"> </textarea>
+            <br/>
+
+            <label for="p_value">Giá trị kiện hàng: </label>
+            <input type="text" class="form-control" placeholder="Giá trị kiện hàng" name="p_value" value="" size="255"
+                   required
+                   autofocus/>
+            <br/>
+
+
+            <label for="p_extra_charge">Phụ phí: </label>
+            <input type="number" class="form-control" placeholder="Phụ phí" name="p_extra_charge" value="0" size="100"
+                   autofocus/>
+            <br/>
+
+
+            <label for="p_receiver2">Họ Tên Người Nhận Thế: </label>
+            <input type="text" class="form-control" placeholder="Họ Tên Người Nhận Thế" name="p_receiver2" value=""
+                   size="100"
+                   autofocus/>
+            <br/>
+
+            <label for="p_phone2">Phone Người Nhận Thế: </label>
+            <input type="number" class="form-control" placeholder="Phone Người Nhận Thế" name="p_phone2" value=""
+                   size="100"
+                   autofocus/>
+            <br/>
+
+            <input type="submit" class="btn btn-primary" value="Submit"/>
+    </form>
+</div>
+{% endblock %}

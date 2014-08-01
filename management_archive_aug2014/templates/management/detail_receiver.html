@@ -1,0 +1,15 @@
+{% extends 'management/base.html' %}
+
+{% block title %} Người Nhận: {{reciever.r_lname}} {{receiver.r_fname}}| Người gửi: {{sender.s_lname}} {{sender.s_fname}} {% endblock %}
+   {%block content %}
+        <div class="the_button">
+     <a class="btn btn-success btn-lg" role="button" href="/management/sender/{{sender_url}}/receiver/{{receiver_url}}/add_package/">Thêm Gói Hàng</a>
+            <a class="btn btn-primary btn-lg" role="button" href="/management/sender/{{sender_url}}/receiver/edit_receiver/{{receiver_url}}">Sửa Người Nhận </a>
+</div>
+
+  {% include 'management/detail_sender_code.html' %}
+
+
+  {% include 'management/detail_receiver_code.html' %}
+
+ {% endblock %}

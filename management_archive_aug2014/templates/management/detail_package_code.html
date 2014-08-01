@@ -1,0 +1,51 @@
+<div class="container-fluid">
+    <div class="profile">
+        <h1>Tracking Number: {{package.id}}</h1>
+
+        <h1>Cân nặng: {{package.p_weight}} </h1>
+
+        <h1>Số kiện: {{package.p_piece}} </h1>
+        <table class="table table-striped table-hover">
+            <tbody>
+            <tr>
+                <td>Chi tiết kiện hàng:</td>
+                <td>{{package.p_content}}</td>
+            </tr>
+            <tr>
+                <td>Giá trị kiện hàng:</td>
+                <td>$ {{package.p_value}}</td>
+            </tr>
+            <tr>
+                <td>Phụ phí:</td>
+                <td>$ {{package.p_extra_charge}}</td>
+            </tr>
+            <tr>
+                <td>Chi tiết hàng gởi: </td>
+                <td>{{package.p_content}}</td>
+            </tr>
+            <td>Tracking:</td>
+            <td>{{package.p_status}}</td>
+            </tr>
+            <tr>
+                <td>Loại: </td>
+                <td>{{package.p_type_field}}</td>
+            </tr>
+            <tr>
+                <td>Thành Tiền:</td>
+                <td>$ {{subtotal}}</td>
+            </tr>
+            <tr>
+                <td>Người Nhận Thế: </td>
+                <td>{{package.p_receiver2}}</td>
+            </tr>
+            <tr>
+                <td>Phone Người Nhận Thế:</td>
+                <td>{{package.p_phone2}}</td>
+            </tr>
+            <tr>
+            </tr>
+
+    </table>
+
+    </div>
+</div>
