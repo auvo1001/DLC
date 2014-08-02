@@ -52,23 +52,26 @@ def add_package(request): # try to combine all
         if sender_form.is_valid() and receiver_form.is_valid() and package_form.is_valid():
             package_added = package_form.save(commit = False)
             sender_form_phone = sender_form.cleaned_data['s_phone']
-            recevier_form_phone = receiver_form.cleaned_data['r_phone1']
-            if Sender.objects.get(s_phone__iexact = sender_form_phone):
+            receiver_form_phone = receiver_form.cleaned_data['r_phone1']
+
+            try:
+                Sender.objects.get(s_phone__iexact = sender_form_phone)
                 sender = Sender.objects.select_for_update().get(s_phone__iexact=sender_form_phone)
                 sender_added = sender.save()
                 sender_url = sender.s_phone
                 package_added.p_sender = sender
-            else:
+            except Sender.DoesNotExist:
                 sender_added = sender_form.save(commit = True)
                 sender_url = sender_added.s_phone
                 package_added.p_sender = sender_added
 
-            if Receiver.objects.get(r_phone1__iexact = receiver_form_phone):
+            try:
+                Receiver.objects.get(r_phone1__iexact = receiver_form_phone)
                 receiver = Receiver.objects.select_for_update().get(r_phone1__iexact=receiver_form_phone)
                 receiver_added = receiver.save()
-                receiver_url = receiver.s_phone
+                receiver_url = receiver.r_phone1
                 package_added.p_receiver = receiver
-            else:
+            except Receiver.DoesNotExist:
                 receiver_added = receiver_form.save(commit = True)
                 receiver_url = receiver_added.r_phone1
                 package_added.p_receiver = receiver_added
@@ -91,6 +94,10 @@ def add_package(request): # try to combine all
     context_dict['package_form'] = package_form
     return render_to_response('management/add_package.html', context_dict, context)
 
+    def get_initial(self):
+        super(PackageCreateForm, self).get_initial()
+        self.p_type_field = {"Door To Door": "Door To Door"}
+        return self.p_type_field
 
 @login_required
 def detail_sender(request, sender_url):

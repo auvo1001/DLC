@@ -5,6 +5,8 @@ from django.utils.encoding import iri_to_uri
 from django.utils.http import urlquote
 from decimal import Decimal
 
+
+
 # Create your models here.
 class Tinh(models.Model):
     t_name = models.CharField(max_length=255)
@@ -85,8 +87,17 @@ class Package(models.Model):
                     )
     p_type_field = models.CharField(max_length=100, choices = type_choices, default = to_door )
 
+    def is_not_shipped(self):
+        return self.p_status in (self.bat_dau)
+
+    def is_en_route(self):
+        return self.p_status in (self.tren_may_bay)
+
     def is_delivered(self):
         return self.p_status in (self.da_giao_hang)
+
+    def is_at_custom(self):
+        return self.p_status in (self.den_Hai_Quan_VN)
 
     def get_rate(self):
         if self.p_type_field == self.to_door:
@@ -113,6 +124,7 @@ class Package(models.Model):
 
     def get_absolute_url(self):
         return self.id
+
 
 
 class Store(models.Model):

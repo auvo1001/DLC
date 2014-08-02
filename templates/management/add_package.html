@@ -48,7 +48,7 @@
 
 
                 <label for="s_phone">Điện Thoại: </label>
-                <input type="number" class="form-control" name="s_phone" placeholder="Điện Thoại" value="{{s_phone}}" size="50"
+                <input type="text" class="form-control" name="s_phone" placeholder="Điện Thoại" value="{{s_phone}}" size="50"
                        required
                        autofocus/>
                 <br/>
@@ -99,13 +99,13 @@
                 <br/>
 
                 <label for="r_phone1">Điện Thoại 1: </label>
-                <input type="number" class="form-control" name="r_phone1" placeholder="Điện Thoại 1" value="" size="100"
+                <input type="text" class="form-control" name="r_phone1" placeholder="Điện Thoại 1" value="" size="100"
                        required
                        autofocus/>
                 <br/>
 
                 <label for="r_phone2">Điện Thoại 2: </label>
-                <input type="number" class="form-control" name="receiver.r_phone2" placeholder="Điện Thoại 2" value=""
+                <input type="text" class="form-control" name="receiver.r_phone2" placeholder="Điện Thoại 2" value=""
                        size="100" autofocus/>
                 <br/>
 
@@ -152,7 +152,7 @@
 
 
                 <label for="p_extra_charge">Phụ phí: </label>
-                <input type="number" class="form-control" name="p_extra_charge" placeholder="Phụ phí" value=""
+                <input type="number" class="form-control" name="p_extra_charge" placeholder="Phụ phí" value="0"
                        size="100"
                        autofocus/>
                 <br/>
@@ -165,7 +165,7 @@
                 <br/>
 
                 <label for="p_phone2">Phone Người Nhận Thế: </label>
-                <input type="number" class="form-control" name="package.p_phone2" placeholder="Phone Người Nhận Thế"
+                <input type="text" class="form-control" name="package.p_phone2" placeholder="Phone Người Nhận Thế"
                        value=""
                        size="100"
                        autofocus/>
@@ -177,4 +177,14 @@
 
     </form>
 </div>
+{% endblock %}
+{%block script %}
+<script>      $('textarea').keypress(function(event) {
+   if (event.which == 13) {
+      event.preventDefault();
+      var s = $(this).val();
+      $(this).val(s+"\n");
+   }
+});​
+</script>
 {% endblock %}

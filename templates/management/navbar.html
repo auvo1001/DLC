@@ -1,12 +1,12 @@
 <ul class="nav navbar-nav">
-            <li class="active"><a  href="/">Home</a></li>
-                {% if user.is_authenticated %}
-            <li><a href="/management/logout">Logout</a></li>
-            <li><a href="/management/add_sender/">Add Sender</a></li>
-    <li><a href="/management/add_package/">Add Pakage</a></li>
-                {% else %}
-            <li><a href="/management/login">Login</a></li>
-                {% endif %}
+    <li class="active"><a href="/">Home</a></li>
+    {% if user.is_authenticated %}
+    <li><a href="/management/logout">Logout</a></li>
 
-          </ul>
+    <li><a href="/management/add_package/">Add Pakage</a></li>
+    {% else %}
+    <li><a href="/management/login">Login</a></li>
+    {% endif %}
+
+</ul>
 

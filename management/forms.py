@@ -14,7 +14,8 @@ class PackageCreateForm(forms.ModelForm):
         exclude =['p_receiver','p_sender','p_status','p_insurance','p_tax']
 
 class PackageStatusUpdateForm(forms.ModelForm):
-
+    p_extra_charge = forms.DecimalField(max_digits= 10, decimal_places=2,  initial=0)
+    p_content = forms.CharField(widget=forms.Textarea)
     class Meta:
         model = Package
         exclude =['p_receiver','p_sender']

@@ -2,7 +2,6 @@
 
 {% block title %}Chi Tiết Kiện Hàng{% endblock %}
 {%block content %}
-<div class="jumbotrona">
 
     <form action="" role="form" method="post">{% csrf_token %}
         <div class="col-md-6">
@@ -114,9 +113,11 @@
             </div>
         </div>
                  <div class="clearfix visible-xs-block"></div>
-        <div class="row">
+        <div class="container-fluid">
+        <div class="profile">
+
             <div class="col-xs-6 col-sm-6"><h1>Chi Tiết Kiện Hàng</h1></div>
-            <div class="col-xs-6 col-sm-6 "> {% for choice in package_form.p_type_field %}
+            <div class="col-xs-6 col-sm-6"> {% for choice in package_form.p_type_field %}
                 {{ choice.choice_label }} {{ choice.tag }}
                 {% endfor %}
             </div>
@@ -133,8 +134,9 @@
 
             <label for="p_content">Chi tiết kiện hàng: </label>
 
-            <input type="textarea" class="form-control" name="p_content" autofocus value="{{package.p_content}}"
-                   style="height:200px"/>
+            <textarea class="form-control" autofocus  name="p_content">{{package.p_content}}</textarea>
+            <!--<input type="textarea" class="form-control" name="p_content" autofocus value="{{package.p_content}}"-->
+                   <!--style="height:150px"/>-->
             <br/>
 
             <label for="p_value">Giá trị kiện hàng: </label>
@@ -164,6 +166,21 @@
             <br/>
 
             <input type="submit" class="btn btn-primary" value="Submit"/>
+            </div>
+
+        </div>
     </form>
-</div>
+
+{% endblock %}
+{%block script %}
+<script>
+     $(document).ready(function() {
+  $("textarea").keydown(function(event){
+    if(event.keyCode == 13) {
+      event.preventDefault();
+      return false;
+    }
+  });
+});
+</script>
 {% endblock %}
