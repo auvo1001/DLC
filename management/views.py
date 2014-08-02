@@ -5,6 +5,9 @@ from django.template import RequestContext
 from django.views.generic.detail import DetailView
 from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required
+from itertools import chain
+from operator import attrgetter
+from django.db.models import Q
 from management.forms import SenderCreateForm, ReceiverCreateForm, PackageCreateForm, StoreForm
 from management.models import Sender, Receiver, Package, Store, Tinh
 
@@ -121,21 +124,25 @@ def detail_sender(request, sender_url):
 
 
 @login_required
-def detail_receiver(request, sender_url, receiver_url):
+# def detail_receiver(request, sender_url, receiver_url):
+def detail_receiver(request, receiver_url):
     context = RequestContext(request)
     context_dict = {}
-    context_dict['sender_url'] = sender_url
+    # context_dict['sender_url'] = sender_url
     context_dict['receiver_url'] = receiver_url
     try:
-        sender = Sender.objects.get(s_phone__iexact=sender_url)
-        context_dict['sender'] = sender
-        context_dict['sender_url'] = sender_url
+        # sender = Sender.objects.get(s_phone__iexact=sender_url)
+        # context_dict['sender'] = sender
+        # context_dict['sender_url'] = sender_url
 
         receiver = Receiver.objects.get(r_phone1__iexact=receiver_url)
+        package = Package.objects.filter(p_receiver__r_phone1__iexact=receiver.r_phone1)
         context_dict['receiver'] = receiver
         context_dict['receiver_url'] = receiver_url
+        context_dict['package'] = package
 
-    except Receiver.DoesNotExist or Sender.DoesNotExist:
+    # except Receiver.DoesNotExist or Sender.DoesNotExist:
+    except Receiver.DoesNotExist:
         pass
     if request.method == 'POST':
         query = request.POST.get('query')
@@ -295,3 +302,53 @@ def get_tinh_list(max_results=0, starts_with=''):
             if len(tinh_list) >max_results:
                 tinh_list - tinh_list[:max_result]
             return tinh_list
+
+
+def search(request):
+    error = False
+    context_dict ={}
+    if 'search_term' in request.GET:
+        search_term = request.GET['search_term']
+
+        if not search_term:
+            error = True
+        else:
+            context_dict['search_term'] = search_term
+            result_list = []
+            sender_list = Sender.objects.filter(Q(s_phone__icontains=search_term) |
+                                                Q(s_fname__icontains=search_term)|
+                                                Q(s_lname__icontains=search_term) |
+                                                Q(s_address1__icontains=search_term)|
+                                                Q(s_address2__icontains=search_term)|
+                                                Q(s_city__icontains=search_term)|
+                                                Q(s_state_province__icontains=search_term) |
+                                                Q(s_zip__icontains=search_term)|
+                                                Q(s_added__icontains=search_term) |
+                                                Q(s_email__icontains=search_term)
+                                                )
+            receiver_list = Receiver.objects.filter(
+                                                Q(r_phone1__icontains=search_term) |
+                                                Q(r_fname__icontains=search_term)|
+                                                Q(r_lname__icontains=search_term) |
+                                                Q(r_address1__icontains=search_term)|
+                                                Q(r_address2__icontains=search_term)|
+                                                Q(r_quan_huyen__icontains=search_term)|
+                                                Q(r_phone2__icontains=search_term)|
+                                                Q(r_email__icontains=search_term)|
+                                                Q(r_added__icontains=search_term)
+                                                )
+            result_list = list(chain(sender_list,receiver_list))
+            # result_list = list(chain(page_list, article_list, post_list))
+            # article_list = Article.objects.filter(Q(title__icontains=cleaned_search_term) | Q(body__icontains=cleaned_search_term) | Q(tags__icontains=cleaned_search_term))
+            # post_list = Post.objects.filter(Q(title__icontains=cleaned_search_term) | Q(body__icontains=cleaned_search_term) | Q(tags__icontains=cleaned_search_term))
+            # try:
+            #     sender_phones = Sender.objects.filter(s_phone__icontains=q)
+            # for sender in sender_phones:
+            #     sender_url = sender.s_phone
+            context_dict['result_list'] = result_list
+            context_dict['sender_list'] = sender_list
+            context_dict['receiver_list'] = receiver_list
+            # context_dict['sender_url'] = sender_url
+            return render(request, 'management/search_results.html', context_dict)
+    context_dict['error']= error
+    return render(request, 'management/search_form.html', context_dict)

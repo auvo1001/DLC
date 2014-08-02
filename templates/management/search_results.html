@@ -1,17 +1,20 @@
 {% extends 'management/base.html' %}{% load static %}
         {% block title %}
-        Resultados de la búsqueda: {{ query }}
+        You search for {{ search_term }}
         {% endblock %}
 
         {%block content %}
 <div class="jumbotrona">
-<p>Que ha buscado: <strong>{{ query }}</strong></p>
+<p>You search for: <strong>{{ search_term }}</strong></p>
 
-{% if orgs %}
-    <p>Hay {{ orgs|length }} Organización {{ orgs|pluralize }}.</p>
+{% if result_list %}
+    <p>Hay {{ result_list|length }} search {{ result_list|pluralize }}.</p>
     <ul>
-        {% for org in orgs %}
-        <li><a href="/management/organization/{{org.url}}/">{{ org.name }}</a></li>
+        {% for sender in result_list %}
+        <li><a href="/management/sender/{{sender.s_phone}}/">{{ sender.s_phone }}</a></li>
+        {% endfor %}
+        {% for receiver in receiver_list %}
+        <li><a href="/management/receiver/{{receiver.r_phone1}}/">{{ receiver.r_phone1 }}</a></li>
         {% endfor %}
     </ul>
 {% else %}
