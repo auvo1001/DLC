@@ -1,5 +1,6 @@
 body {
-  padding-top: 50px;
+  padding-top: 70px;
+  font-size:16px;
 }
 .starter-template {
   padding: 40px 15px;
@@ -32,6 +33,7 @@ body {
 }
 
 .the_button {
+    margin-top:5px;
     margin-left: auto;
     margin-right: auto;
     width : 15%;
@@ -55,3 +57,17 @@ div select{
           transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
 }
 
+.clickableRow {
+cursor: pointer;
+
+}
+.clickableRow:hover {
+  color: #357ebd;
+
+}
+.navbar-inverse .navbar-nav > li > a{
+  color: #FF9933;
+}
+.selection{
+font-size:30px;
+}

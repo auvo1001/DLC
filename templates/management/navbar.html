@@ -1,11 +1,28 @@
-<ul class="nav navbar-nav">
+<ul class="nav navbar-nav ">
     <li class="active"><a href="/">Home</a></li>
     {% if user.is_authenticated %}
     <li><a href="/management/logout">Logout</a></li>
 
-    <li><a href="/management/add_package/">Add Pakage</a></li>
+    <li><a href="/management/add_package/">Thêm Kiện Hàng Mới</a></li>
+
+    {%url 'detail_package' package_url=package.id as detail_package_url%}
+    {%url 'detail_sender' sender_url=sender.s_phone as detail_sender_url%}
+    {%url 'detail_receiver' receiver_url=receiver.r_phone1 as detail_receiver_url%}
+           {% if detail_package_url %}
+   {%url 'edit_package' package_url=package.id as edit_package_url%}
+    <li><a href="{{edit_package_url}}">Sửa Kiện
+        Hàng</a></li>
+            {%elif detail_sender_url %}
+    {%url 'edit_sender'  sender_url=sender.s_phone as edit_sender_url%}
+    <li><a href="{{edit_sender_url}}">Sửa Người Gửi</a></li>
+            {%elif detail_receiver_url %}
+    {%url 'edit_receiver'  receiver_url=receiver.r_phone1 as edit_receiver_url%}
+    <li><a href="{{edit_receiver_url}}">Sửa Người Nhận</a></li>
+       {% endif %}
     {% else %}
     <li><a href="/management/login">Login</a></li>
+
+
     {% endif %}
 
 </ul>

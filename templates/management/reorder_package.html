@@ -112,75 +112,77 @@
                 <br/>
             </div>
         </div>
-                 <div class="clearfix visible-xs-block"></div>
-        <div class="container-fluid">
+         <div class="clearfix visible-xs-block"></div>
         <div class="profile">
+            <div class="row">
+                <div class="col-xs-6 col-sm-6"><h1>Chi Tiết Kiện Hàng</h1></div>
+                <div class="col-xs-6 col-sm-6 selection"> {% for choice in package_form.p_type_field %}
+                 {{ choice.choice_label }} {{ choice.tag }}
+                    {% endfor %}
+                </div>
+                <div class="clearfix visible-xs-block"></div>
+                <label for="p_weight">Cân nặng: </label>
+                <input type="number" class="form-control" name="p_weight" placeholder="Cân nặng" value="" size="255"
+                       required
+                       autofocus step="any" min=".4"/>
+                <br/>
 
-            <div class="col-xs-6 col-sm-6"><h1>Chi Tiết Kiện Hàng</h1></div>
-            <div class="col-xs-6 col-sm-6"> {% for choice in package_form.p_type_field %}
-                {{ choice.choice_label }} {{ choice.tag }}
-                {% endfor %}
+                <label for="p_piece">Số kiện: </label>
+                <input type="number" class="form-control" name="p_piece" placeholder="Số kiện" value="" size="255"
+                       required
+                       autofocus/>
+                <br/>
+
+                <label for="p_content">Chi tiết kiện hàng: </label>
+
+                <input type="textarea" class="form-control" name="p_content" placeholder="Chi tiết kiện hàng" autofocus
+                       value=""
+                       style="height:200px"/>
+                <br/>
+
+                <label for="p_value">Giá trị kiện hàng: </label>
+                <input type="text" class="form-control" name="p_value" placeholder="Giá trị kiện hàng" value=""
+                       size="255"
+                       required
+                       autofocus/>
+                <br/>
+
+
+                <label for="p_extra_charge">Phụ phí: </label>
+                <input type="number" class="form-control" name="p_extra_charge" placeholder="Phụ phí" value="0"
+                       size="100"
+                       autofocus/>
+                <br/>
+
+
+                <label for="p_receiver2">Họ Tên Người Nhận Thế: </label>
+                <input type="text" class="form-control" name="p_receiver2" placeholder="Họ Tên Người Nhận Thế" value=""
+                       size="100"
+                       autofocus/>
+                <br/>
+
+                <label for="p_phone2">Phone Người Nhận Thế: </label>
+                <input type="text" class="form-control" name="package.p_phone2" placeholder="Phone Người Nhận Thế"
+                       value=""
+                       size="100"
+                       autofocus/>
+                <br/>
+
+                <input type="submit" class="btn btn-primary" value="Submit"/>
             </div>
-            <div class="clearfix visible-xs-block"></div>
-            <label for="p_weight">Cân nặng: </label>
-            <input type="number" class="form-control" name="p_weight" value="{{package.p_weight}}" size="255" required
-                   autofocus step="any" min=".4"/>
-            <br/>
-
-            <label for="p_piece">Số kiện: </label>
-            <input type="number" class="form-control" name="p_piece" value="{{package.p_piece}}" size="255" required
-                   autofocus/>
-            <br/>
-
-            <label for="p_content">Chi tiết kiện hàng: </label>
-
-            <textarea class="form-control" autofocus  name="p_content">{{package.p_content}}</textarea>
-            <!--<input type="textarea" class="form-control" name="p_content" autofocus value="{{package.p_content}}"-->
-                   <!--style="height:150px"/>-->
-            <br/>
-
-            <label for="p_value">Giá trị kiện hàng: </label>
-            <input type="text" class="form-control" name="p_value" value="{{package.p_value}}" size="255"
-                   required
-                   autofocus/>
-            <br/>
-
-
-            <label for="p_extra_charge">Phụ phí: </label>
-            <input type="number" class="form-control" name="p_extra_charge" value="{{package.p_extra_charge}}"
-                   size="100"
-                   autofocus/>
-            <br/>
-
-
-            <label for="p_receiver2">Họ Tên Người Nhận Thế: </label>
-            <input type="text" class="form-control" name="p_receiver2" value="{{package.p_receiver2}}"
-                   size="100"
-                   autofocus/>
-            <br/>
-
-            <label for="p_phone2">Phone Người Nhận Thế: </label>
-            <input type="number" class="form-control" name="package.p_phone2" value="{{package.phone2}}"
-                   size="100"
-                   autofocus/>
-            <br/>
-
-            <input type="submit" class="btn btn-primary" value="Submit"/>
-            </div>
-
         </div>
-    </form>
 
+    </form>
+</div>
 {% endblock %}
 {%block script %}
-<script>
-     $(document).ready(function() {
-  $("textarea").keydown(function(event){
-    if(event.keyCode == 13) {
+<script type="text/javascript">
+      $('textarea').keypress(function(event) {
+   if (event.which == 13) {
       event.preventDefault();
-      return false;
-    }
-  });
-});
+      var s = $(this).val();
+      $(this).val(s+"\n");
+   }
+});​
 </script>
 {% endblock %}

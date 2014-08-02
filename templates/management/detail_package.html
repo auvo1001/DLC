@@ -2,12 +2,7 @@
 
 {% block title %} Kiện Hàng Tracking: {{package.id}} {% endblock %}
 {%block content %}
-<div class="the_button">
-    <a class="btn btn-primary btn-lg" role="button"
-       href="/management/sender/{{sender_url}}/receiver/{{receiver_url}}/package/edit_package/{{package_url}}">Sửa Kiện
-        Hàng </a>
-</div>
-<div class="clearfix visible-xs"></div>
+
 <div class="col-md-6">
     <div class="profile">
         <h1>Người gửi: {{sender.s_lname}} {{sender.s_fname}}</h1>
@@ -107,7 +102,7 @@
 
         <h1>Cân nặng: {{package.p_weight}} </h1>
 
-        <h1>Date: {{package.p_added}}</h1>
+        <h1>Ngày Làm Đơn: {{package.p_added}}</h1>
 
         <h1>Số kiện: {{package.p_piece}} </h1>
         <table class="table table-striped table-hover">

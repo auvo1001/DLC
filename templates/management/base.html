@@ -17,7 +17,6 @@
     <link href="{% static 'css/bootstrap.css' %}" rel="stylesheet">
     <link href="{% static 'css/stylesheet.css' %}" rel="stylesheet">
     <!-- Custom styles for this template -->
-    <link href="starter-template.css" rel="stylesheet">
 
     <!-- Just for debugging purposes. Don't actually copy this line! -->
     <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
@@ -38,7 +37,7 @@
             </button>
 
         </div>
-        <div class="collapse navbar-collapse">
+        <div class="collapse navbar-collapse ">
             {% include 'management/navbar.html' %}
             {% if user.is_authenticated %}
             {% include 'management/search_form.html' %}
@@ -62,8 +61,8 @@
 <!-- Bootstrap core JavaScript
 ================================================== -->
 <!-- Placed at the end of the document so the pages load faster -->
-<script src="{% static 'js/jquery-2.1.0.js' %}"></script>
-<script src="{% static 'js/bootsrap.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/jquery-2.1.0.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/bootsrap.min.js' %}"></script>
 {%block script %}
 
 {% endblock %}

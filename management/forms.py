@@ -7,7 +7,7 @@ from functools import partial
 class PackageCreateForm(forms.ModelForm):
     type_choices = [('Door To Door', 'Door To Door',), ('Air To Air', 'Air To Air',)]
     p_type_field = forms.CharField(widget=forms.RadioSelect(choices=type_choices), initial = 'Door To Door')
-
+    p_extra_charge = forms.DecimalField(max_digits= 10, decimal_places=2,  initial=0)
 
     class Meta:
         model = Package

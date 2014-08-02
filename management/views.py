@@ -18,8 +18,6 @@ def index(request):
     return render_to_response('management/index.html', context_dict, context)
 
 
-
-
 def login_view(request):
     context = RequestContext(request)
 
@@ -41,8 +39,9 @@ def login_view(request):
     else:
         return render_to_response('management/login.html', {}, context)
 
+
 @login_required
-def add_package(request): # try to combine all
+def add_package(request):
     context = RequestContext(request)
     context_dict={}
     tinh_list = get_tinh_list()
@@ -50,7 +49,6 @@ def add_package(request): # try to combine all
         sender_form = SenderCreateForm(request.POST)
         receiver_form = ReceiverCreateForm(request.POST)
         package_form = PackageCreateForm(request.POST)
-
 
         if sender_form.is_valid() and receiver_form.is_valid() and package_form.is_valid():
             package_added = package_form.save(commit = False)
@@ -82,7 +80,7 @@ def add_package(request): # try to combine all
             package_added = package_form.save(commit = True)
             package_url = package_added.id
 
-            redirect_url = reverse('detail_package', args=(sender_url, receiver_url, package_url,))
+            redirect_url = reverse('detail_package', args=(package_url,))
             return HttpResponseRedirect(redirect_url)
 
         else:
@@ -102,6 +100,52 @@ def add_package(request): # try to combine all
         self.p_type_field = {"Door To Door": "Door To Door"}
         return self.p_type_field
 
+
+@login_required
+def reorder_package(request, sender_url, receiver_url):
+    context = RequestContext(request)
+    context_dict={}
+    context_dict['sender_url'] = sender_url
+    context_dict['receiver_url'] = receiver_url
+    sender = Sender.objects.get(s_phone__iexact=sender_url)
+    receiver = Receiver.objects.get(r_phone1__iexact=receiver_url)
+
+    if request.method == 'POST':
+        sender_form = SenderCreateForm(request.POST, instance = sender)
+        receiver_form = ReceiverCreateForm(request.POST, instance = receiver)
+        package_form = PackageCreateForm(request.POST)
+
+        if sender_form.is_valid() and receiver_form.is_valid() and package_form.is_valid():
+            sender_edited = sender_form.save()
+            sender_url = sender_edited.s_phone
+
+            receiver_edited = receiver_form.save()
+            receiver_url = receiver_edited.r_phone1
+
+            package = package_form.save(commit = False)
+            package.p_sender = sender_edited
+            package.p_receiver = receiver_edited
+            package = package_form.save(commit = True)
+            package_url = package.id
+            context_dict['package_url'] = package_url
+            context_dict['package'] = package
+            redirect_url = reverse('detail_package',args=(package_url,))
+            return HttpResponseRedirect(redirect_url)
+        else:
+            return HttpResponse( "%s %s %s %s %s %s" %(str(sender),sender_form.errors,str(receiver),receiver_form.errors,str("halo"), package_form.errors))
+    else:
+        sender_form = SenderCreateForm(instance=sender)
+        receiver_form = ReceiverCreateForm(instance=receiver)
+        package_form= PackageCreateForm()
+
+    context_dict['sender'] = sender
+    context_dict['receiver'] = receiver
+
+    context_dict['sender_form']= sender_form
+    context_dict['receiver_form'] = receiver_form
+    context_dict['package_form'] = package_form
+    return render_to_response('management/reorder_package.html',  context_dict, context)
+
 @login_required
 def detail_sender(request, sender_url):
     context = RequestContext(request)
@@ -116,7 +160,6 @@ def detail_sender(request, sender_url):
         context_dict['sender'] = sender
         context_dict['sender_url'] = sender.s_phone
         context_dict['package'] = package
-        # context_dict['receiver'] = receiver
     except Sender.DoesNotExist:
         pass
 
@@ -130,25 +173,22 @@ def detail_sender(request, sender_url):
 
 
 @login_required
-# def detail_receiver(request, sender_url, receiver_url):
 def detail_receiver(request, receiver_url):
     context = RequestContext(request)
     context_dict = {}
-    # context_dict['sender_url'] = sender_url
-    context_dict['receiver_url'] = receiver_url
     try:
-        # sender = Sender.objects.get(s_phone__iexact=sender_url)
-        # context_dict['sender'] = sender
-        # context_dict['sender_url'] = sender_url
 
         receiver = Receiver.objects.get(r_phone1__iexact=receiver_url)
         package = Package.objects.filter(p_receiver__r_phone1__iexact=receiver.r_phone1)
+        for pack in package:
+            sender_phone = pack.p_sender.s_phone
+            sender = Sender.objects.filter(package__p_sender__s_phone=sender_phone)
+            context_dict['sender'] = sender
         context_dict['receiver'] = receiver
-        context_dict['receiver_url'] = receiver_url
+        context_dict['receiver_url'] = receiver.r_phone1
         context_dict['package'] = package
-
-    # except Receiver.DoesNotExist or Sender.DoesNotExist:
     except Receiver.DoesNotExist:
+#raise error here
         pass
     if request.method == 'POST':
         query = request.POST.get('query')
@@ -159,26 +199,26 @@ def detail_receiver(request, receiver_url):
     return render_to_response('management/detail_receiver.html', context_dict, context)
 
 
+
+
 @login_required
-def detail_package(request, sender_url, receiver_url, package_url):
+def detail_package(request, package_url):
     context = RequestContext(request)
     context_dict = {}
-
+    context_dict['package_url'] = package_url
     try:
-        sender = Sender.objects.get(s_phone__iexact=sender_url)
-        context_dict['sender'] = sender
-        context_dict['sender_url'] = sender_url
-
-        receiver = Receiver.objects.get(r_phone1__iexact=receiver_url)
-        context_dict['receiver'] = receiver
-        context_dict['receiver_url'] = receiver_url
-
         package = Package.objects.get(id__iexact=package_url)
-        context_dict['package'] = package
-        context_dict['package_url'] = package_url
-        context_dict['subtotal'] = package.subtotal()
+        sender = Sender.objects.get(s_phone__iexact=package.p_sender.s_phone)
+        receiver = Receiver.objects.get(r_phone1__iexact=package.p_receiver.r_phone1)
 
-    except Receiver.DoesNotExist:
+        context_dict['sender'] = sender
+        context_dict['sender_url'] =  sender.s_phone
+
+        context_dict['receiver'] = receiver
+        context_dict['receiver_url'] = receiver.r_phone1
+        context_dict['package'] = package
+
+    except Package.DoesNotExist:
         pass
     if request.method == 'POST':
         query = request.POST.get('query')
@@ -209,11 +249,11 @@ def edit_sender(request ,sender_url):
     context_dict['sender'] =sender
     context_dict['form']=form
     context_dict['sender_url'] = sender_url
-    return render_to_response('management/edit_sender_form.html',  context_dict, context)
+    return render_to_response('management/edit_sender.html',  context_dict, context)
 
 
 @login_required
-def edit_receiver(request , sender_url, receiver_url):
+def edit_receiver(request , receiver_url):
     context=RequestContext(request)
     receiver = Receiver.objects.get(r_phone1__iexact=receiver_url)
 
@@ -222,7 +262,7 @@ def edit_receiver(request , sender_url, receiver_url):
         if form.is_valid():
             edited = form.save()
             receiver_url = edited.r_phone1
-            redirect_url = reverse('detail_receiver',args=(sender_url, receiver_url,))
+            redirect_url = reverse('detail_receiver',args=(receiver_url,))
             return HttpResponseRedirect(redirect_url)
 
     else:
@@ -231,36 +271,44 @@ def edit_receiver(request , sender_url, receiver_url):
     context_dict={}
     context_dict['receiver'] = receiver
     context_dict['form']=form
-    context_dict['sender_url'] = sender_url
     context_dict['receiver_url'] = receiver_url
-    return render_to_response('management/edit_receiver_form.html',  context_dict, context)
+    return render_to_response('management/edit_receiver.html',  context_dict, context)
 
 
-def edit_package(request , sender_url, receiver_url, package_url):
-    context=RequestContext(request)
-    tinh_list = get_tinh_list()
-    sender = Sender.objects.get(s_phone__iexact = sender_url)
-    receiver = Receiver.objects.get(r_phone1__iexact = receiver_url)
-    package = Package.objects.get(id__iexact = package_url)
+def edit_package(request , package_url):
+    context = RequestContext(request)
+    context_dict = {}
+    context_dict['package_url'] = package_url
+    try:
+        package = Package.objects.get(id__iexact=package_url)
+        sender = Sender.objects.get(s_phone__iexact=package.p_sender.s_phone)
+        receiver = Receiver.objects.get(r_phone1__iexact=package.p_receiver.r_phone1)
+
+    except Package.DoesNotExist:
+        pass
+
 
     if request.method == 'POST':
         sender_form = SenderCreateForm(request.POST, instance = sender)
         receiver_form = ReceiverCreateForm(request.POST, instance = receiver)
         package_form = PackageCreateForm(request.POST, instance = package)
+
         if sender_form.is_valid() and receiver_form.is_valid() and package_form.is_valid():
             sender_edited = sender_form.save()
             sender_url = sender_edited.s_phone
+            context_dict['sender_url'] = sender_url
 
             receiver_edited = receiver_form.save()
             receiver_url = receiver_edited.r_phone1
+            context_dict['receiver_url'] = receiver_url
 
             package_edited = package_form.save(commit = False)
             package_edited.p_sender = sender_edited
             package_edited.p_receiver = receiver_edited
             package_edited = package_form.save(commit = True)
             package_url = package_edited.id
-
-            redirect_url = reverse('detail_package',args=(sender_url, receiver_url, package_url,))
+            context_dict['package_url'] = package_url
+            redirect_url = reverse('detail_package',args=(package_url,))
             return HttpResponseRedirect(redirect_url)
         else:
             return HttpResponse( "%s %s %s %s %s %s" %(str(sender),sender_form.errors,str(receiver),receiver_form.errors,str(package), package_form.errors))
@@ -277,11 +325,8 @@ def edit_package(request , sender_url, receiver_url, package_url):
     context_dict['sender_form']= sender_form
     context_dict['receiver_form'] = receiver_form
     context_dict['package_form'] = package_form
-    context_dict['sender_url'] = sender_url
-    context_dict['receiver_url'] = receiver_url
-    context_dict['package_url'] = package_url
 
-    return render_to_response('management/edit_package_form.html',  context_dict, context)
+    return render_to_response('management/edit_package.html',  context_dict, context)
 
 
 def encode_url(stri):
@@ -343,18 +388,21 @@ def search(request):
                                                 Q(r_email__icontains=search_term)|
                                                 Q(r_added__icontains=search_term)
                                                 )
-            result_list = list(chain(sender_list,receiver_list))
-            # result_list = list(chain(page_list, article_list, post_list))
-            # article_list = Article.objects.filter(Q(title__icontains=cleaned_search_term) | Q(body__icontains=cleaned_search_term) | Q(tags__icontains=cleaned_search_term))
-            # post_list = Post.objects.filter(Q(title__icontains=cleaned_search_term) | Q(body__icontains=cleaned_search_term) | Q(tags__icontains=cleaned_search_term))
-            # try:
-            #     sender_phones = Sender.objects.filter(s_phone__icontains=q)
-            # for sender in sender_phones:
-            #     sender_url = sender.s_phone
+
+            package_list = Package.objects.filter(
+                                                Q(p_content__icontains=search_term) |
+                                                Q(p_receiver2__icontains=search_term) |
+                                                Q(p_phone2__icontains=search_term)|
+                                                Q(p_added__icontains=search_term)|
+                                                Q(p_updated__icontains=search_term)|
+                                                Q(p_status__icontains=search_term)|
+                                                Q(p_type_field__icontains=search_term)
+                                                )
+            result_list = list(chain(sender_list,receiver_list,package_list))
             context_dict['result_list'] = result_list
             context_dict['sender_list'] = sender_list
             context_dict['receiver_list'] = receiver_list
-            # context_dict['sender_url'] = sender_url
+            context_dict['package_list'] = package_list
             return render(request, 'management/search_results.html', context_dict)
     context_dict['error']= error
     return render(request, 'management/search_form.html', context_dict)

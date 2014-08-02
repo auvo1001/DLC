@@ -32,6 +32,9 @@ class Sender(models.Model):
     def __unicode__(self):
         return self.s_phone
 
+    def s_fullname(self):
+        return '%s %s' % (self.s_lname, self.s_fname)
+
 
 class Receiver(models.Model):
     r_fname = models.CharField(max_length=255)
@@ -48,6 +51,9 @@ class Receiver(models.Model):
 
     def __unicode__(self):
         return self.r_phone1
+
+    def r_fullname(self):
+        return '%s %s' % (self.r_lname, self.r_fname)
 
 class Package(models.Model):
     p_sender = models.ForeignKey(Sender)
@@ -124,7 +130,6 @@ class Package(models.Model):
 
     def get_absolute_url(self):
         return self.id
-
 
 
 class Store(models.Model):

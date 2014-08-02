@@ -1,13 +1,126 @@
-{% extends 'management/base.html' %}
+{% extends 'management/base.html' %}{% load static %}
 
-{% block title %}  Người gửi {{sender.s_lname}} {{sender.s_fname}} {% endblock %}
+{% block title %}  Người Gửi: {{sender.s_lname}} {{sender.s_name}} {% endblock %}
 
-    {%block content %}
-<div class="the_button">
-     <a class="btn btn-success btn-lg" role="button" href="/management/sender/{{sender_url}}/add_receiver/">Thêm Người Nhận</a>
-    <a class="btn btn-primary btn-lg" role="button" href="/management/sender/edit_sender/{{sender_url}}/">Sửa Người Gửi </a>
+{%block content %}
+<div class="clearfix visible-xs"></div>
+<div class="col-md-6">
+    <div class="profile">
+        <h1>Người Gửi: {{sender.s_fullname}}</h1>
+
+        <h1>Phone: {{sender.s_phone}} </h1>
+        <table class="table table-striped table-hover">
+            <tbody>
+            <tr>
+                <td>Địa chỉ 1</td>
+                <td>{{sender.s_address1}}</td>
+            </tr>
+            <tr>
+                <td>Địa chỉ 2</td>
+                <td>{{sender.s_address2}}</tzd>
+            </tr>
+            <tr>
+                <td>Thành Phố</td>
+                <td>{{sender.s_city}}</td>
+            </tr>
+            <tr>
+                <td>Bang</td>
+                <td>{{sender.s_state_province}}</td>
+            </tr>
+            <tr>
+                <td>zip</td>
+                <td>{{sender.s_zip}}</td>
+            </tr>
+            <tr>
+                <td>Phone</td>
+                <td>{{sender.s_phone}}</td>
+            </tr>
+            <tr>
+                <td>email</td>
+                <td>{{sender.s_email}}</td>
+            </tr>
+            <tr>
+                <td></td>
+            </tr>
+        </table>
+    </div>
 </div>
-         <div class="clearfix visible-xs"></div>
-     {% include 'management/detail_sender_code.html' %}
+<div class="col-md-6">
+    <div class="profile">
+        <h1>Danh Sách Người Nhận</h1>
+        <table class="table table-striped table-hover">
+            <tbody>
+             <tr>
+                <td>Tên</td><td>Số Điện Thoại</td><td>Reorder?</td>
+            </tr>
+              {% for each_receiver in receiver %}
+            <tr class='clickableRow' href='/management/receiver/{{each_receiver.r_phone1}}/'>
+
+                <td>{{each_receiver.r_fullname}}</td>
+                <td>{{each_receiver.r_phone1}}</td>
+                <td><a class="btn btn-info" href="/management/reorder_package/{{sender.s_phone}}/{{each_receiver.r_phone1}}/">Reorder</a></td>
+                {% endfor %}
+            </tr>
+            <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+</tbody>
+            </table>
+    </div>
+</div>
+<div class="clearfix visible-xs"></div>
+<div class="col-md-12">
+    <div class="profile">
+        <h1>Danh Sách Hàng Gửi</h1>
+        <table class="table table-striped table-hover">
+            <tbody>
+            <tr>
+                <td>Tracking Number</td>
+                <td>Tracking</td>
+                <td>Ngày Làm Đơn</td>
+                <td>Người Gửi</td>
+                <td>Người Nhận</td>
+                <td>Cân nặng</td>
+                <td>Số kiện</td>
+                <td>Loại</td>
+                <td>Thành Tiền</td>
+            </tr>
+            {% for each_package in package %}
+            <tr class='clickableRow' href='/management/package/{{each_package.id}}/' >
+
+           <td>{{each_package.id}}</td>
+                <td> {{ each_package.p_status }}</td>
+                <td> {{ each_package.p_added }}</td>
+                <td> {{ each_package.p_sender }}</td>
+                <td> {{ each_package.p_receiver }}</td>
+                <td> {{ each_package.p_weight }}</td>
+                <td> {{ each_package.p_piece }}</td>
+                <td>{{ each_package.p_type_field}}</td>
+                <td>$ {{ each_package.subtotal}}</td>
+
+            </tr>
+            {% endfor %}
+            <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+
+            </tr>
+            </tbody>
+            </table>
+    </div>
+</div>
 
 {% endblock %}
+
+{% block script %}
+<script type="text/javascript" src="{% static 'js/table-row-clickable.js' %}"></script>
+{%endblock %}

@@ -7,7 +7,7 @@
     <form action="" role="form" method="post">{% csrf_token %}
         <div class="col-md-6">
             <div class="profile">
-                <h1>Người gửi</h1>
+                <h1>Người Gửi</h1>
                 <label for="s_lname">Họ </label>
                 <input type="text" class="form-control" placeholder="Họ" name="s_lname" value="{{s_lname}}" size="255" required
                        autofocus/>
@@ -119,7 +119,7 @@
         <div class="profile">
             <div class="row">
                 <div class="col-xs-6 col-sm-6"><h1>Chi Tiết Kiện Hàng</h1></div>
-                <div class="col-xs-6 col-sm-6"> {% for choice in package_form.p_type_field %}
+                <div class="col-xs-6 col-sm-6 selection"> {% for choice in package_form.p_type_field %}
                  {{ choice.choice_label }} {{ choice.tag }}
                     {% endfor %}
                 </div>
@@ -179,7 +179,8 @@
 </div>
 {% endblock %}
 {%block script %}
-<script>      $('textarea').keypress(function(event) {
+<script type="text/javascript">
+      $('textarea').keypress(function(event) {
    if (event.which == 13) {
       event.preventDefault();
       var s = $(this).val();
