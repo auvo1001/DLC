@@ -108,17 +108,23 @@ def detail_sender(request, sender_url):
     context_dict = {}
     try:
         sender = Sender.objects.get(s_phone__iexact=sender_url)
+        package = Package.objects.filter(p_sender__s_phone__iexact=sender.s_phone)
+        for pack in package:
+            receiver_phone = pack.p_receiver.r_phone1
+            receiver = Receiver.objects.filter(package__p_receiver__r_phone1=receiver_phone)
+            context_dict['receiver'] = receiver
         context_dict['sender'] = sender
         context_dict['sender_url'] = sender.s_phone
-
+        context_dict['package'] = package
+        # context_dict['receiver'] = receiver
     except Sender.DoesNotExist:
         pass
 
     if request.method == 'POST':
-        query = request.POST.get('query')
-        if query:
+        search_term = request.POST.get('search_term')
+        if search_term:
             query = query.strip()
-            result_list = run_query(query)
+            result_list = run_query(search_term)
             context_dict['result_list'] = result_list
     return render_to_response('management/detail_sender.html', context_dict, context)
 
