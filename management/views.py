@@ -1,3 +1,5 @@
+import datetime
+from django.utils import timezone
 from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import render_to_response, redirect, render, get_object_or_404
 from django.http import HttpResponse, HttpResponseRedirect
@@ -10,11 +12,20 @@ from operator import attrgetter
 from django.db.models import Q
 from management.forms import SenderCreateForm, ReceiverCreateForm, PackageCreateForm, StoreForm
 from management.models import Sender, Receiver, Package, Store, Tinh
-
+from decimal import Decimal
+from django.db.models import Count, Min, Sum, Avg
 
 def index(request):
     context = RequestContext(request)
     context_dict = {}
+    now = timezone.now()
+    yesterday = datetime.date.today() - datetime.timedelta(days=1)
+    yesterday_package = Package.objects.filter(p_added__contains=yesterday)
+    today_package = Package.objects.filter(p_added__contains=datetime.date.today())
+
+    context_dict['now']=now
+    context_dict['today_package']=today_package
+    context_dict['yesterday_package']=yesterday_package
     return render_to_response('management/index.html', context_dict, context)
 
 

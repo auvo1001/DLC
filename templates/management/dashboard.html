@@ -2,33 +2,112 @@
 
         {% block title %}Dashboard{% endblock %}
         {%block content %}
-        <div class="col-md-6">
-            <div class="rep">
-            <h1>PLACEHOLDER</h1>
-            <!--{% if latest_org_list %}
-                <ul>
-                {% for org in latest_org_list %}
-                    <li><a href="/management/organization/{{ org.url }}">{{ org.name }} : {{org.country }} {{org.country.region }}</a></li>
-                {% endfor %}
-                </ul>
-            {% else %}
-                <p>No hay organizaciones.<a href="/management/create_organization_form/">¿Te gustaría añadir uno?</a></p>
-            {% endif %} -->
+<div class="col-md-12">
+            <div class="profile">
+            <h1>Today</h1>
+        <table class="table table-striped table-hover">
+            <tbody>
+            <tr>
+                <td>Tracking Number</td>
+                <td>Tracking</td>
+                <td>Ngày Làm Đơn</td>
+                <td>Người Gửi</td>
+                <td>Người Nhận</td>
+                <td>Cân nặng</td>
+                <td>Số kiện</td>
+                <td>Loại</td>
+                <td>Thành Tiền</td>
+            </tr>
+            {% for each_package in today_package %}
+            <tr class='clickableRow' href='/management/package/{{each_package.id}}/' >
+
+           <td>{{each_package.id}}</td>
+                <td> {{ each_package.p_status }}</td>
+                <td> {{ each_package.p_added }}</td>
+                <td> {{ each_package.p_sender.s_fullname  }}</td>
+                <td> {{ each_package.p_receiver.r_fullname  }}</td>
+                <td> {{ each_package.p_weight }}</td>
+                <td> {{ each_package.p_piece }}</td>
+                <td>{{ each_package.p_type_field}}</td>
+                <td>$ {{ each_package.subtotal}}</td>
+
+            </tr>
+            {% endfor %}
+            <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+
+            </tr>
+            </tbody>
+            </table>
           </div>
           </div>
-        <div class="col-md-6">
-        <div class="rep">
+<div class="col-md-12">
+            <div class="profile">
+            <h1>Yesterday </h1>
+        <table class="table table-striped table-hover">
+            <tbody>
+            <tr>
+                <td>Tracking Number</td>
+                <td>Tracking</td>
+                <td>Ngày Làm Đơn</td>
+                <td>Người Gửi</td>
+                <td>Người Nhận</td>
+                <td>Cân nặng</td>
+                <td>Số kiện</td>
+                <td>Loại</td>
+                <td>Thành Tiền</td>
+            </tr>
+            {% for each_package in yesterday_package %}
+            <tr class='clickableRow' href='/management/package/{{each_package.id}}/' >
+
+           <td>{{each_package.id}}</td>
+                <td> {{ each_package.p_status }}</td>
+                <td> {{ each_package.p_added }}</td>
+                <td> {{ each_package.p_sender.s_fullname }}</td>
+                <td> {{ each_package.p_receiver.r_fullname  }}</td>
+                <td> {{ each_package.p_weight }}</td>
+                <td> {{ each_package.p_piece }}</td>
+                <td>{{ each_package.p_type_field}}</td>
+                <td>$ {{ each_package.subtotal}}</td>
+
+            </tr>
+            {% endfor %}
+            <tr>
+                <td>Tong Cong</td>
+                <td>{{yesterday_package.count}} Kien</td>
+                <td>Thanh Tien</td>
+                <td>{{each_package.subtotal }}</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+
+            </tr>
+            </tbody>
+            </table>
+          </div>
+          </div>
+        <div class="col-md-12">
+        <div class="profile">
 
              <h1>PLACEHOLDER</h1>
-       <!--      {% if latest_trip_list %}
-                <ul>
-                {% for trip in latest_trip_list %}
-                    <li><a href="">{{ trip.date }} - {{trip.org }}</a></li>
-                {% endfor %}
-                </ul>
-            {% else %}
-                <p>No hay viajes.</p>
-            {% endif %} -->
+            {{yesterday}}
+            {{now}}
+
         </div>
         </div>
         {% endblock %}
+
+
+{% block script %}
+<script type="text/javascript" src="{% static 'js/table-row-clickable.js' %}"></script>
+{%endblock %}
