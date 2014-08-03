@@ -71,3 +71,8 @@ cursor: pointer;
 .selection{
 font-size:30px;
 }
+
+#searchbar{
+width: 300px;
+
+}

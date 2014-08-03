@@ -8,17 +8,25 @@
     {%url 'detail_package' package_url=package.id as detail_package_url%}
     {%url 'detail_sender' sender_url=sender.s_phone as detail_sender_url%}
     {%url 'detail_receiver' receiver_url=receiver.r_phone1 as detail_receiver_url%}
-           {% if detail_package_url %}
-   {%url 'edit_package' package_url=package.id as edit_package_url%}
-    <li><a href="{{edit_package_url}}">Sửa Kiện
-        Hàng</a></li>
-            {%elif detail_sender_url %}
-    {%url 'edit_sender'  sender_url=sender.s_phone as edit_sender_url%}
-    <li><a href="{{edit_sender_url}}">Sửa Người Gửi</a></li>
-            {%elif detail_receiver_url %}
-    {%url 'edit_receiver'  receiver_url=receiver.r_phone1 as edit_receiver_url%}
-    <li><a href="{{edit_receiver_url}}">Sửa Người Nhận</a></li>
-       {% endif %}
+    {%url 'reorder_package' sender_url=sender.s_phone receiver_url=receiver.r_phone1 as reorder_package_url %}
+
+    {% if reorder_package_url %}
+
+    {% elif detail_package_url %}
+        {%url 'edit_package' package_url=package.id as edit_package_url%}
+        <li><a href="{{edit_package_url}}">Sửa Kiện
+            Hàng</a></li>
+
+    {%elif detail_sender_url %}
+        {%url 'edit_sender' sender_url=sender.s_phone as edit_sender_url%}
+        <li><a href="{{edit_sender_url}}">Sửa Người Gửi</a></li>
+
+    {%elif detail_receiver_url %}
+        {%url 'edit_receiver' receiver_url=receiver.r_phone1 as edit_receiver_url%}
+        <li><a href="{{edit_receiver_url}}">Sửa Người Nhận</a></li>
+
+    {% endif %}
+
     {% else %}
     <li><a href="/management/login">Login</a></li>
 

@@ -18,14 +18,36 @@ from django.db.models import Count, Min, Sum, Avg
 def index(request):
     context = RequestContext(request)
     context_dict = {}
-    now = timezone.now()
-    yesterday = datetime.date.today() - datetime.timedelta(days=1)
-    yesterday_package = Package.objects.filter(p_added__contains=yesterday)
-    today_package = Package.objects.filter(p_added__contains=datetime.date.today())
 
-    context_dict['now']=now
-    context_dict['today_package']=today_package
-    context_dict['yesterday_package']=yesterday_package
+
+    yesterday = datetime.date.today() - datetime.timedelta(days=1)
+    y_p = Package.objects.filter(p_added__contains=yesterday) #yesterday_package
+    y_p_d = y_p.filter(p_type_field="Door To Door") #yesterday_package_door
+    y_p_d_w = y_p_d.aggregate(Sum('p_weight')) # yesterday_package_door_weight
+    y_p_t = sum(Decimal(package.subtotal())  for package in y_p) #yesterday_package_total
+    y_p_a = y_p.filter(p_type_field="Air To Air") #yesterday_package_air
+    y_p_a_w = y_p_a.aggregate(Sum('p_weight')) # yesterday_package_air_weight
+    context_dict['y_p']=y_p
+    context_dict['y_p_d']=y_p_d
+    context_dict['y_p_a']=y_p_a
+    context_dict['y_p_d_w']=y_p_d_w
+    context_dict['y_p_a_w']=y_p_a_w
+    context_dict['y_p_t']=y_p_t
+
+    t_p = Package.objects.filter(p_added__contains=datetime.date.today()) #today_package
+    t_p_d = t_p.filter(p_type_field="Door To Door") #today_package_door
+    t_p_d_w = t_p_d.aggregate(Sum('p_weight')) # today_package_door_weight
+    t_p_t = sum(Decimal(package.subtotal())  for package in t_p) #today_package_total
+    t_p_a = t_p.filter(p_type_field="Air To Air") #today_package_air
+    t_p_a_w = t_p_a.aggregate(Sum('p_weight')) # today_package_air_weight
+    context_dict['t_p']=t_p
+    context_dict['t_p_d']=t_p_d
+    context_dict['t_p_a']=t_p_a
+    context_dict['t_p_d_w']=t_p_d_w
+    context_dict['t_p_a_w']=t_p_a_w
+    context_dict['t_p_t']=t_p_t
+
+
     return render_to_response('management/index.html', context_dict, context)
 
 
@@ -166,7 +188,7 @@ def detail_sender(request, sender_url):
         package = Package.objects.filter(p_sender__s_phone__iexact=sender.s_phone)
         for pack in package:
             receiver_phone = pack.p_receiver.r_phone1
-            receiver = Receiver.objects.filter(package__p_receiver__r_phone1=receiver_phone)
+            receiver = Receiver.objects.filter(package__p_receiver__r_phone1=receiver_phone).distinct()
             context_dict['receiver'] = receiver
         context_dict['sender'] = sender
         context_dict['sender_url'] = sender.s_phone
@@ -193,7 +215,7 @@ def detail_receiver(request, receiver_url):
         package = Package.objects.filter(p_receiver__r_phone1__iexact=receiver.r_phone1)
         for pack in package:
             sender_phone = pack.p_sender.s_phone
-            sender = Sender.objects.filter(package__p_sender__s_phone=sender_phone)
+            sender = Sender.objects.filter(package__p_sender__s_phone=sender_phone).distinct()
             context_dict['sender'] = sender
         context_dict['receiver'] = receiver
         context_dict['receiver_url'] = receiver.r_phone1

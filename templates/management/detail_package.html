@@ -4,149 +4,16 @@
 {%block content %}
 
 <div class="col-md-6">
-    <div class="profile">
-        <h1>Người gửi: {{sender.s_lname}} {{sender.s_fname}}</h1>
-
-        <h1>Phone: {{sender.s_phone}} </h1>
-        <table class="table table-striped table-hover">
-            <tbody>
-            <!--<tr>-->
-            <!--<td>Họ</td>-->
-            <!--<td>{{sender.lname}}</td>-->
-            <!--</tr>-->
-            <!--<tr>-->
-            <!--<td>Tên</td>-->
-            <!--<td>{{sender.fname}}</td>-->
-            <!--</tr>-->
-            <tr>
-                <td>Địa chỉ 1</td>
-                <td>{{sender.s_address1}}</td>
-            </tr>
-            <tr>
-                <td>Địa chỉ 2</td>
-                <td>{{sender.s_address2}}</td>
-            </tr>
-            <tr>
-                <td>Thành Phố</td>
-                <td>{{sender.s_city}}</td>
-            </tr>
-            <tr>
-                <td>Bang</td>
-                <td>{{sender.s_state_province}}</td>
-            </tr>
-            <tr>
-                <td>zip</td>
-                <td>{{sender.s_zip}}</td>
-            </tr>
-            <tr>
-                <td>Phone</td>
-                <td>{{sender.s_phone}}</td>
-            </tr>
-            <tr>
-                <td>email</td>
-                <td>{{sender.s_email}}</td>
-            </tr>
-            <tr>
-                <td></td>
-            </tr>
-        </table>
-    </div>
+ {% include 'management/detail_sender_code.html' %}
 </div>
 
 <div class="col-md-6">
-    <div class="profile">
-        <h1>Người Nhận: {{reciever.r_lname}} {{receiver.r_fname}}</h1>
-
-        <h1>Phone: {{receiver.r_phone1}} </h1>
-        <table class="table table-striped table-hover">
-            <tr>
-                <td>Địa chỉ 1</td>
-                <td>{{receiver.r_address1}}</td>
-            </tr>
-            <tr>
-                <td>Địa chỉ 2</td>
-                <td>{{receiver.r_address2}}</td>
-            </tr>
-            <tr>
-                <td>Quận/ Huyện</td>
-                <td>{{receiver.r_quan_huyen}}</td>
-            </tr>
-            <tr>
-                <td>Tỉnh/ Thành Phố:</td>
-                <td>{{receiver.r_tinh_thanhpho}}</td>
-            </tr>
-            <tr>
-                <td>Phone1</td>
-                <td>{{receiver.r_phone1}}</td>
-            </tr>
-            <tr>
-                <td>Phone2</td>
-                <td>{{receiver.r_phone2}}</td>
-            </tr>
-            <tr>
-                <td>email</td>
-                <td>{{receiver.r_email}}</td>
-            </tr>
-            <tr>
-                <td></td>
-            </tr>
-        </table>
-
-    </div>
+ {% include 'management/detail_receiver_code.html' %}
 </div>
 
 <div class="clearfix visible-xs-block"></div>
 <div class="container-fluid">
-    <div class="profile">
-        <h1>Tracking Number: {{package.id}}</h1>
-
-        <h1>Cân nặng: {{package.p_weight}} </h1>
-
-        <h1>Ngày Làm Đơn: {{package.p_added}}</h1>
-
-        <h1>Số kiện: {{package.p_piece}} </h1>
-        <table class="table table-striped table-hover">
-            <tbody>
-            <tr>
-                <td>Chi tiết kiện hàng:</td>
-                <td>{{package.p_content|linebreaks}}</td>
-            </tr>
-            <tr>
-                <td>Giá trị kiện hàng:</td>
-                <td>$ {{package.p_value}}</td>
-            </tr>
-            <tr>
-                <td>Phụ phí:</td>
-                <td>$ {{package.p_extra_charge}}</td>
-            </tr>
-
-            <td>Tracking:</td>
-            <td>{{package.p_status}}</td>
-            </tr>
-            <tr>
-                <td>Loại:</td>
-                <td>{{package.p_type_field}}</td>
-            </tr>
-            <tr>
-                <td>Thành Tiền:</td>
-                <td>$ {{subtotal}}</td>
-            </tr>
-            <tr>
-                <td>Người Nhận Thế:</td>
-                <td>{{package.p_receiver2}}</td>
-            </tr>
-            <tr>
-                <td>Phone Người Nhận Thế:</td>
-                <td>{{package.p_phone2}}</td>
-            </tr>
-            <tr>
-                <td></td>
-                 <td></td>
-            </tr>
-
-        </table>
-
-    </div>
+{% include 'management/detail_package_code.html' %}
 </div>
 
 {% endblock %}
