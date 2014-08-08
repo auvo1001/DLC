@@ -14,12 +14,14 @@ from management.forms import SenderCreateForm, ReceiverCreateForm, PackageCreate
 from management.models import Sender, Receiver, Package, Store, Tinh
 from decimal import Decimal
 from django.db.models import Count, Min, Sum, Avg
+from reportlab.pdfgen import canvas
+
+
+
 
 def index(request):
     context = RequestContext(request)
     context_dict = {}
-
-
     yesterday = datetime.date.today() - datetime.timedelta(days=1)
     y_p = Package.objects.filter(p_added__contains=yesterday) #yesterday_package
     y_p_d = y_p.filter(p_type_field="Door To Door") #yesterday_package_door
@@ -27,6 +29,8 @@ def index(request):
     y_p_t = sum(Decimal(package.subtotal())  for package in y_p) #yesterday_package_total
     y_p_a = y_p.filter(p_type_field="Air To Air") #yesterday_package_air
     y_p_a_w = y_p_a.aggregate(Sum('p_weight')) # yesterday_package_air_weight
+
+
     context_dict['y_p']=y_p
     context_dict['y_p_d']=y_p_d
     context_dict['y_p_a']=y_p_a
@@ -46,6 +50,7 @@ def index(request):
     context_dict['t_p_d_w']=t_p_d_w
     context_dict['t_p_a_w']=t_p_a_w
     context_dict['t_p_t']=t_p_t
+
 
 
     return render_to_response('management/index.html', context_dict, context)
@@ -439,3 +444,24 @@ def search(request):
             return render(request, 'management/search_results.html', context_dict)
     context_dict['error']= error
     return render(request, 'management/search_form.html', context_dict)
+
+@login_required
+def report_lab(request):
+    # Create the HttpResponse object with the appropriate PDF headers.
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = 'inline; filename="somefilename.pdf"'
+    context_dict ={}
+
+    package = Package.objects.get(id=3)
+    context_dict['package'] = package
+    # Create the PDF object, using the response object as its "file."
+    p = canvas.Canvas(response)
+
+    # Draw things on the PDF. Here's where the PDF generation happens.
+    # See the ReportLab documentation for the full list of functionality.
+    p.drawString(300, 300, str(context_dict))
+
+    # Close the PDF object cleanly, and we're done.
+    p.showPage()
+    p.save()
+    return response
