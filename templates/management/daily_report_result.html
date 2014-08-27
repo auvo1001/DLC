@@ -1,0 +1,22 @@
+{% extends 'management/base.html' %}{% load static %}
+{% block title %}
+Tìm Kiếm Kien Hang tu: {{from_date }} den {{to_date}}
+{% endblock %}
+
+{%block content %}
+<div class="jumbotrona">
+    <p>Kết Quả Tìm Kiếm <strong> tu: {{from_date }} den {{to_date}}</strong></p>
+
+    {% if package %}
+    <p>Có {{ package |length }} kết quả.</p>
+
+</div>
+  <div class="jumbotrona">
+    {% include 'management/list_package_code.html' %}
+
+    {% else %}
+    <p>Không Có Kết Quả Trong Tìm Kiếm</p>
+    {% endif %}
+</div>
+
+{% endblock %}

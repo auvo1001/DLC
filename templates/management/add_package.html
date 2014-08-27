@@ -267,17 +267,3 @@
 </form>
 
 {% endblock %}
-{%block script %}
-<script type="text/javascript">
-      $('textarea').keypress(function(event) {
-   if (event.which == 13) {
-      event.preventDefault();
-      var s = $(this).val();
-      $(this).val(s+"\n");
-   }
-});​
-
-
-
-</script>
-{% endblock %}

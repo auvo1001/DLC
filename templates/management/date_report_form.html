@@ -1,0 +1,54 @@
+{% extends 'management/base.html' %}{{ form.media }}{% load static %}
+{% block title %}search{% endblock %}
+{%block stylesheet %}
+
+<link href="{% static 'css/datepicker.css' %}" rel="stylesheet">
+<link href="{% static 'css/normalize.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+
+<div class="jumbotrona">
+
+                {% if error %}
+            <div class="col-md-12">
+             <div class="profile">
+                <p style="color: red;">Vui lòng nhập bất kỳ chuỗi tìm kiếm.</p>
+                <a class="btn btn-danger the_button" href="/management/">Trở Về trang chủ</a>
+                 </div>
+                  </div>
+                {% endif %}
+    <form method="get" action="/management/daily_report/" method="get" role="form">
+
+
+
+        <label for="from_date">From: </label>
+        <input class="form-control datepicker" name="from_date" placeholder="from date" value="" size="100" required
+               autofocus/>
+
+        <label for="to_date">To: </label>
+        <input class="form-control datepicker" name="to_date" placeholder="to date" value="" size="100" required
+               autofocus/>
+        <br/>
+        <input type="submit" text="submit" class="btn btn-primary" value="Show Report"/>
+
+
+        <a href="/management/" class="btn btn-danger">Cancel</a>
+
+
+    </form>
+</div>
+{% endblock %}
+
+{%block script %}
+     <script src="//code.jquery.com/jquery-1.10.2.js"></script>
+  <script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+<script type="text/javascript">
+$(function() {
+  $(".datepicker").datepicker();
+             });
+
+</script>
+{% endblock %}
+<!DOCTYPE html>
+{% load static %}

@@ -18,6 +18,8 @@ urlpatterns = patterns('',
     url(r'^logout/$',views.logout_view,name='logout'),
     url(r'^login/$',views.login_view,name='login'),
     url(r'search/$',views.search,name='search'),
+    url(r'daily_report/$',views.daily_report,name='daily_report'),
+    url(r'pdf_test/$',views.pdf_test,name='pdf_test'),
     )
 
 

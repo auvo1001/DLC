@@ -1,23 +1,126 @@
 import datetime
+import StringIO
+from itertools import chain
+from operator import attrgetter
+from decimal import Decimal
+
 from django.utils import timezone
-from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import render_to_response, redirect, render, get_object_or_404
 from django.http import HttpResponse, HttpResponseRedirect
 from django.template import RequestContext
 from django.views.generic.detail import DetailView
 from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required
-from itertools import chain
-from operator import attrgetter
+from django.contrib.auth import authenticate, login, logout
 from django.db.models import Q
+from django.db.models import Count, Min, Sum, Avg
+
 from management.forms import SenderCreateForm, ReceiverCreateForm, PackageCreateForm, StoreForm
 from management.models import Sender, Receiver, Package, Store, Tinh
-from decimal import Decimal
-from django.db.models import Count, Min, Sum, Avg
+
+from PyPDF2 import PdfFileWriter, PdfFileReader
+
 from reportlab.pdfgen import canvas
+from reportlab.platypus import Spacer
+from reportlab.lib.pagesizes import letter
+from reportlab.lib.units import inch
 
 
+def pdf_test(request):
 
+    #get package
+    package = Package.objects.get(id =1)
+    packet = StringIO.StringIO()
+    # create a new PDF with Reportlab
+    can = canvas.Canvas(packet, pagesize=letter)
+    can.setFont("Helvetica", 12, None)
+    #convert to string and draw each attributes. x,y cartesian from bottom left
+    #sender
+    p_s_fullname = str(package.p_sender.s_fullname())
+    can.drawString(0.75*inch, 8.80*inch, p_s_fullname)
+    p_s_address1 = str(package.p_sender.s_address1)
+    can.drawString(0.75*inch, 8.30*inch, p_s_address1)
+    p_s_address2 = str(package.p_sender.s_address2)
+    can.drawString(0.75*inch, 8*inch, p_s_address2)
+    p_s_city = str(package.p_sender.s_city)
+    can.drawString(4*inch, 8.3*inch, p_s_city)
+    p_s_state_province = str(package.p_sender.s_state_province)
+    can.drawString(4*inch, 7.9*inch, p_s_state_province)
+    p_s_zip = str(package.p_sender.s_zip)
+    can.drawString(3.75*inch, 7.40*inch, p_s_zip)
+    p_s_phone = str(package.p_sender.s_phone)
+    can.drawString(0.75*inch, 7.40*inch, p_s_phone)
+
+    #receiver
+    p_r_fullname = str(package.p_receiver.r_fullname())
+    can.drawString(0.75*inch, 7*inch, p_r_fullname)
+    p_r_address1 = str(package.p_receiver.r_address1)
+    can.drawString(0.75*inch, 6.5*inch, p_r_address1)
+    p_r_address2 = str(package.p_receiver.r_address2)
+    can.drawString(0.75*inch, 6.5*inch, p_r_address2)
+    p_r_quan_huyen = str(package.p_receiver.r_quan_huyen)
+    can.drawString(3.75*inch, 6.5*inch, p_r_quan_huyen)
+    p_r_tinh_thanhpho = str(package.p_receiver.r_tinh_thanhpho)
+    can.drawString(3.75*inch, 6*inch, p_r_tinh_thanhpho)
+    p_r_phone1 = str(package.p_receiver.r_phone1)
+    can.drawString(0.75*inch, 5.5*inch, p_r_phone1)
+    p_r_phone2 = str(package.p_receiver.r_phone2)
+    can.drawString(3.75*inch, 5.5*inch, p_r_phone2)
+
+    #package
+    p_piece = str(package.p_piece)
+    can.drawString(7.5*inch, 8.75*inch, p_piece)
+    p_weight = str(package.p_weight)
+    can.drawString(7.5*inch, 8*inch, p_weight)
+    p_value = str(package.p_value)
+    can.drawString(6*inch, 7*inch, p_value)
+    p_extra_charge = str(package.p_extra_charge)
+    can.drawString(7.5*inch, 7.3*inch, "$ " +   p_extra_charge)
+    p_subtotal = str(package.subtotal())
+    can.drawString(7*inch, 6.5*inch,"$ " + p_subtotal)
+    p_receiver2 = str(package.p_receiver2)
+    can.drawString(6*inch, 6*inch, p_receiver2)
+    p_phone2 = str(package.p_phone2)
+    can.drawString(6*inch, 5.5*inch, p_phone2)
+    p_added = str(datetime.datetime.date(package.p_added))
+    can.drawString(3.25*inch, 0.45*inch, p_added)
+
+    if package.p_type_field == "Door To Door":
+        can.drawString(5.5*inch, 8.5*inch, "X")
+    elif package.p_type_field == "Air To Air":
+        can.drawString(5.5*inch, 8*inch, "X")
+
+    p_content = str(package.p_content)
+    # p_content.replace('\r\n','xxooxx')
+    textobject = can.beginText(0.5*inch, 4.75*inch)
+#simple but got problem with p_content, this code breaks into each lines but does not get rid of the black rectangle yet
+
+    for line in p_content:
+        textobject.textOut(line)
+        if line=='\n':
+            textobject.textLine(text=line.replace('\n',''))
+
+    can.drawText(textobject)
+    can.save()
+
+    #move to the beginning of the StringIO buffer
+    packet.seek(0)
+    new_pdf = PdfFileReader(packet)
+    # read your existing PDF
+    existing_pdf = PdfFileReader(file("management/DLC_Form.pdf", "rb"))
+    output = PdfFileWriter()
+
+    # add the "watermark" (which is the new pdf) on the existing page
+    page = existing_pdf.getPage(0)
+    page.mergePage(new_pdf.getPage(0))
+    output.addPage(page)
+
+    # finally, write "output" to a real file
+    outputStream = file("management/destination.pdf", "wb")
+    output.write(outputStream)
+    outputStream.close()
+
+    return HttpResponse(p_content)
 
 def index(request):
     context = RequestContext(request)
@@ -127,6 +230,7 @@ def add_package(request):
         sender_form = SenderCreateForm()
         receiver_form = ReceiverCreateForm()
         package_form= PackageCreateForm()
+
 
     context_dict['sender_form']= sender_form
     context_dict['receiver_form'] = receiver_form
@@ -392,6 +496,26 @@ def get_tinh_list(max_results=0, starts_with=''):
                 tinh_list - tinh_list[:max_result]
             return tinh_list
 
+@login_required
+def report_lab(request):
+    # Create the HttpResponse object with the appropriate PDF headers.
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = 'inline; filename="somefilename.pdf"'
+    context_dict ={}
+
+    package = Package.objects.get(id=3)
+    context_dict['package'] = package
+    # Create the PDF object, using the response object as its "file."
+    p = canvas.Canvas(response)
+
+    # Draw things on the PDF. Here's where the PDF generation happens.
+    # See the ReportLab documentation for the full list of functionality.
+    p.drawString(300, 300, str(context_dict))
+
+    # Close the PDF object cleanly, and we're done.
+    p.showPage()
+    p.save()
+    return response
 
 def search(request):
     error = False
@@ -445,23 +569,26 @@ def search(request):
     context_dict['error']= error
     return render(request, 'management/search_form.html', context_dict)
 
-@login_required
-def report_lab(request):
-    # Create the HttpResponse object with the appropriate PDF headers.
-    response = HttpResponse(content_type='application/pdf')
-    response['Content-Disposition'] = 'inline; filename="somefilename.pdf"'
+
+
+
+def daily_report(request):
+    error = False
     context_dict ={}
+    if 'from_date' and 'to_date' in request.GET:
+        from_date = request.GET['from_date']
+        to_date = request.GET['to_date']
+        if not from_date:
+            error = True
+        else:
+            context_dict['to_date'] = to_date
+            context_dict['from_date'] = from_date
+            package = Package.objects.filter(Q(p_added__gt=from_date)
+                                                  &
+                                                Q(p_added__lt=to_date)
+                                                )
 
-    package = Package.objects.get(id=3)
-    context_dict['package'] = package
-    # Create the PDF object, using the response object as its "file."
-    p = canvas.Canvas(response)
-
-    # Draw things on the PDF. Here's where the PDF generation happens.
-    # See the ReportLab documentation for the full list of functionality.
-    p.drawString(300, 300, str(context_dict))
-
-    # Close the PDF object cleanly, and we're done.
-    p.showPage()
-    p.save()
-    return response
+            context_dict['package'] = package
+            return render(request, 'management/daily_report_result.html', context_dict)
+    context_dict['error']= error
+    return render(request, 'management/date_report_form.html', context_dict)

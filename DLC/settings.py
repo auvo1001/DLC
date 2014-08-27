@@ -133,6 +133,7 @@ INSTALLED_APPS = (
     'django.contrib.admin',
     'django.contrib.admindocs',
     'management',
+    'PyPDF2',
     #'south',
 )
 

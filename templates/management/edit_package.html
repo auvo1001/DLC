@@ -102,7 +102,7 @@
                 <br/>
 
                 <label for="r_phone2">Điện Thoại 2: </label>
-                <input type="number" class="form-control" name="receiver.r_phone2" value="{{receiver.r_phone2}}"
+                <input type="number" class="form-control" name="r_phone2" value="{{receiver.r_phone2}}"
                        size="100" autofocus/>
                 <br/>
 
@@ -159,7 +159,7 @@
             <br/>
 
             <label for="p_phone2">Phone Người Nhận Thế: </label>
-            <input type="number" class="form-control" name="package.p_phone2" value="{{package.phone2}}"
+            <input type="number" class="form-control" name="p_phone2" value="{{package.p_phone2}}"
                    size="100"
                    autofocus/>
             <br/>
@@ -170,16 +170,4 @@
         </div>
     </form>
 
-{% endblock %}
-{%block script %}
-<script>
-     $(document).ready(function() {
-  $("textarea").keydown(function(event){
-    if(event.keyCode == 13) {
-      event.preventDefault();
-      return false;
-    }
-  });
-});
-</script>
 {% endblock %}

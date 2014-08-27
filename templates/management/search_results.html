@@ -14,7 +14,8 @@ Tìm Kiếm:  {{ search_term }}
     <h3>Người Gửi</h3>
     <ul>
         {% for sender in sender_list %}
-        <li><a href="/management/sender/{{sender.s_phone}}/">Tên: {{ sender.s_fullname }}<br/>Số Điện Thoại: {{ sender.s_phone }}</a></li>
+        <li><a href="/management/sender/{{sender.s_phone}}/">Tên: {{ sender.s_fullname }} | Số Điện Thoại:
+            {{sender.s_phone }}</a></li>
         {% endfor %}
         {%endif%}
     </ul>
@@ -22,7 +23,8 @@ Tìm Kiếm:  {{ search_term }}
     <h3>Người Nhận</h3>
     <ul>
         {% for receiver in receiver_list %}
-        <li><a href="/management/receiver/{{receiver.r_phone1}}/">Tên: {{ receiver.r_fullname }}<br/>Số Điện Thoại:  {{ receiver.r_phone1 }}</a></li>
+        <li><a href="/management/receiver/{{receiver.r_phone1}}/">Tên: {{ receiver.r_fullname }}    |      Số Điện Thoại:
+            {{receiver.r_phone1 }}</a></li>
         {% endfor %}
     </ul>
     {%endif%}
@@ -31,7 +33,10 @@ Tìm Kiếm:  {{ search_term }}
     <h3>Kiện Hàng</h3>
     <ul>
         {% for package in package_list %}
-        <li><a href="/management/package/{{package.id}}/">Tracking number: {{ package.id}}<br/>Của {{package.p_sender.s_fullname }} | Số Điện Thoại: {{ package.p_sender.s_phone }}<br/>Gửi cho  {{ package.p_receiver.r_fullname }} | Số Điện Thoại:  {{ package.p_receiver.r_phone1 }}  </a></li>
+        <li><a href="/management/package/{{package.id}}/">Tracking number: {{ package.id}}          Của
+            {{package.p_sender.s_fullname }} | Số Điện Thoại: {{ package.p_sender.s_phone }}          Gửi cho
+            {{package.p_receiver.r_fullname }} | Số Điện Thoại: {{ package.p_receiver.r_phone1 }}    |      Ngay gui
+            {{package.p_added}} </a></li>
         {% endfor %}
     </ul>
     {%endif%}
