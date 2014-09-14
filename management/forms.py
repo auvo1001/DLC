@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.admin import widgets
-from management.models import Package, Sender, Receiver, Store, User, Tinh
+from management.models import Package, Sender, Receiver, Store, User, Tinh, Mawb, Hawb, Box
 from django.contrib.auth.models import User
 from functools import partial
 

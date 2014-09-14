@@ -1,7 +1,7 @@
 <ul class="nav navbar-nav ">
     <li class="active"><a href="/">Home</a></li>
     {% if user.is_authenticated %}
-    <li><a href="/management/logout">Logout</a></li>
+    <li><a href="/management/logout/">Logout</a></li>
 
     <li><a href="/management/add_package/">Thêm Kiện Hàng Mới</a></li>
     <li><a href="/management/daily_report/">Report</a></li>
@@ -11,6 +11,7 @@
     {%url 'reorder_package' sender_url=sender.s_phone receiver_url=receiver.r_phone1 as reorder_package_url %}
 
     {% if detail_package_url and detail_sender_url and detail_receiver_url %}
+    <li><a href="/management/package/{{package_url}}/print_receipt/">In Receipt</a></li>
     {%url 'edit_package' package_url=package.id as edit_package_url%}
     <li><a href="{{edit_package_url}}">Sửa Kiện Hàng</a></li>
     {% endif %}

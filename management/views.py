@@ -1,8 +1,10 @@
 import datetime
 import StringIO
+import os
 from itertools import chain
 from operator import attrgetter
 from decimal import Decimal
+
 
 from django.utils import timezone
 from django.shortcuts import render_to_response, redirect, render, get_object_or_404
@@ -91,14 +93,16 @@ def pdf_test(request):
         can.drawString(5.5*inch, 8*inch, "X")
 
     p_content = str(package.p_content)
-    # p_content.replace('\r\n','xxooxx')
     textobject = can.beginText(0.5*inch, 4.75*inch)
-#simple but got problem with p_content, this code breaks into each lines but does not get rid of the black rectangle yet
 
-    for line in p_content:
-        textobject.textOut(line)
-        if line=='\n':
-            textobject.textLine(text=line.replace('\n',''))
+    for c in p_content:
+        if c == '\n':
+            textobject.textLine()
+        elif c == '\r':
+            pass # do nothing
+        else:
+            textobject.textOut(c)
+
 
     can.drawText(textobject)
     can.save()
@@ -592,3 +596,135 @@ def daily_report(request):
             return render(request, 'management/daily_report_result.html', context_dict)
     context_dict['error']= error
     return render(request, 'management/date_report_form.html', context_dict)
+
+
+def display_not_shipped_package(request):
+    context_dict ={}
+    package = Package.objects.filter(p_status__icontains = "bat dau")
+    # if package.p_piece >=1:
+    #     context_dict['package'] = package
+    #
+    context_dict['package'] = package
+    return render(request, 'management/not_ship_package.html', context_dict)
+
+
+def print_receipt(request,package_url):
+
+    context_dict={}
+    context_dict['package_url'] = package_url
+    context = RequestContext(request)
+
+
+    #get package
+    package = Package.objects.get(id__iexact =package_url)
+    packet = StringIO.StringIO()
+    # create a new PDF with Reportlab
+    can = canvas.Canvas(packet, pagesize=letter)
+    can.setFont("Helvetica", 12, None)
+    #convert to string and draw each attributes. x,y cartesian from bottom left
+    #sender
+    p_s_fullname = str(package.p_sender.s_fullname())
+    can.drawString(0.75*inch, 8.80*inch, p_s_fullname)
+    p_s_address1 = str(package.p_sender.s_address1)
+    can.drawString(0.75*inch, 8.30*inch, p_s_address1)
+    p_s_address2 = str(package.p_sender.s_address2)
+    can.drawString(0.75*inch, 8*inch, p_s_address2)
+    p_s_city = str(package.p_sender.s_city)
+    can.drawString(4*inch, 8.3*inch, p_s_city)
+    p_s_state_province = str(package.p_sender.s_state_province)
+    can.drawString(4*inch, 7.9*inch, p_s_state_province)
+    p_s_zip = str(package.p_sender.s_zip)
+    can.drawString(3.75*inch, 7.40*inch, p_s_zip)
+    p_s_phone = str(package.p_sender.s_phone)
+    can.drawString(0.75*inch, 7.40*inch, p_s_phone)
+
+    #receiver
+    p_r_fullname = str(package.p_receiver.r_fullname())
+    can.drawString(0.75*inch, 7*inch, p_r_fullname)
+    p_r_address1 = str(package.p_receiver.r_address1)
+    can.drawString(0.75*inch, 6.5*inch, p_r_address1)
+    p_r_address2 = str(package.p_receiver.r_address2)
+    can.drawString(0.75*inch, 6.5*inch, p_r_address2)
+    p_r_quan_huyen = str(package.p_receiver.r_quan_huyen)
+    can.drawString(3.75*inch, 6.5*inch, p_r_quan_huyen)
+    p_r_tinh_thanhpho = str(package.p_receiver.r_tinh_thanhpho)
+    can.drawString(3.75*inch, 6*inch, p_r_tinh_thanhpho)
+    p_r_phone1 = str(package.p_receiver.r_phone1)
+    can.drawString(0.75*inch, 5.5*inch, p_r_phone1)
+    p_r_phone2 = str(package.p_receiver.r_phone2)
+    can.drawString(3.75*inch, 5.5*inch, p_r_phone2)
+
+    #package
+    p_piece = str(package.p_piece)
+    can.drawString(7.5*inch, 8.75*inch, p_piece)
+    p_weight = str(package.p_weight)
+    can.drawString(7.5*inch, 8*inch, p_weight)
+    p_value = str(package.p_value)
+    can.drawString(6*inch, 7*inch, p_value)
+    p_extra_charge = str(package.p_extra_charge)
+    can.drawString(7.5*inch, 7.3*inch, "$ " +   p_extra_charge)
+    p_subtotal = str(package.subtotal())
+    can.drawString(7*inch, 6.5*inch,"$ " + p_subtotal)
+    p_receiver2 = str(package.p_receiver2)
+    can.drawString(6*inch, 6*inch, p_receiver2)
+    p_phone2 = str(package.p_phone2)
+    can.drawString(6*inch, 5.5*inch, p_phone2)
+    p_added = str(datetime.datetime.date(package.p_added))
+    can.drawString(3.25*inch, 0.45*inch, p_added)
+
+    if package.p_type_field == "Door To Door":
+        can.drawString(5.5*inch, 8.5*inch, "X")
+    elif package.p_type_field == "Air To Air":
+        can.drawString(5.5*inch, 8*inch, "X")
+
+    p_content = str(package.p_content)
+    # p_content.replace('\r\n','xxooxx')
+    textobject = can.beginText(0.5*inch, 4.75*inch)
+   #simple but got problem with p_content, this code breaks into each lines but does not get rid of the black rectangle yet
+
+    for c in p_content:
+        if c == '\n':
+            textobject.textLine()
+        elif c == '\r':
+            pass # do nothing
+        else:
+            textobject.textOut(c)
+
+
+    can.drawText(textobject)
+    can.save()
+
+    #move to the beginning of the StringIO buffer
+    packet.seek(0)
+    new_pdf = PdfFileReader(packet)
+    # read your existing PDF
+    existing_pdf = PdfFileReader(file("management/DLC_Form.pdf", "rb"))
+    output = PdfFileWriter()
+
+    # add the "watermark" (which is the new pdf) on the existing page
+    page = existing_pdf.getPage(0)
+    page.mergePage(new_pdf.getPage(0))
+    output.addPage(page)
+
+    # finally, write "output" to a real file
+
+    filename ="Receipt"+package_url+".pdf"
+    filedir = "media/receipts/"
+    filepath = os.path.join( MEDIA_ROOT, filedir, filename )
+
+
+    outputStream = file(filepath, "wb") #need to change if there are multiple stores
+
+    output.write(outputStream)
+    outputStream.close()
+
+    pdf=open(filepath)
+    response = HttpResponse(pdf.read(),content_type='application/pdf')
+    response['Content-Disposition'] = 'attachment;filename=%s' % filename
+    return response
+    # response = HttpResponse(pdf.read(), mimetype='application/pdf')
+    # response['Content-Disposition'] = 'attachment;filename=' + filename
+    # pdf.closed
+    # return response
+    # return HttpResponse('complete')
+

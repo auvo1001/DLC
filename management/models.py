@@ -8,7 +8,7 @@ from decimal import Decimal
 
 
 # Create your models here.
-class Tinh(models.Model):
+class Tinh(models.Model): #state
     t_name = models.CharField(max_length=255)
     t_region = models.CharField(max_length=128)
     t_price_type= models.IntegerField()
@@ -41,8 +41,8 @@ class Receiver(models.Model):
     r_lname = models.CharField(max_length=255)
     r_address1 = models.CharField( max_length=255)
     r_address2 = models.CharField( max_length=255, blank=True)
-    r_quan_huyen = models.CharField( max_length=255)
-    r_tinh_thanhpho = models.ForeignKey(Tinh)
+    r_quan_huyen = models.CharField( max_length=255) # district
+    r_tinh_thanhpho = models.ForeignKey(Tinh) #county
     r_phone1 = models.CharField(max_length=50)
     r_phone2 = models.CharField(max_length=50, blank=True)
     r_email = models.EmailField(max_length=100, blank=True)
@@ -72,10 +72,10 @@ class Package(models.Model):
     p_receipt_signature = models.FileField(upload_to='receipt_signature/%Y/%m/%d', max_length=100, blank=True)
 
     #tracking choices
-    bat_dau = "bat dau"
-    tren_may_bay = "tren may bay"
-    den_Hai_Quan_VN = "den Hai Quan VN"
-    da_giao_hang= "da giao hang"
+    bat_dau = "bat dau" #start
+    tren_may_bay = "tren may bay" #en route on the airplane
+    den_Hai_Quan_VN = "den Hai Quan VN" #arrive at custom
+    da_giao_hang= "da giao hang" #delivered
     status_choices = (
         (bat_dau,  "bat dau"),
         (tren_may_bay, "tren may bay"),
@@ -153,4 +153,69 @@ class User(models.Model):
 
     def __unicode__(self):
         return self.user.username
+
+class Box(models.Model):
+    air = "Air"
+    box = "Box"
+    single ="Single"
+    type_choices = (
+        (air, "Air"),
+        (box,"Box"),
+        (single,"Single"),
+                    )
+    b_type_field = models.CharField(max_length=50, choices = type_choices, default = box )
+    b_number = models.IntegerField()
+    b_weight = models.DecimalField(max_digits= 10, decimal_places=2)
+
+    bat_dau = "bat dau"
+    tren_may_bay = "tren may bay"
+    den_Hai_Quan_VN = "den Hai Quan VN"
+    da_giao_hang= "da giao hang"
+    status_choices = (
+        (bat_dau,  "bat dau"),
+        (tren_may_bay, "tren may bay"),
+        (den_Hai_Quan_VN, "den Hai Quan VN"),
+        (da_giao_hang, "da giao hang"),
+                    )
+    b_status = models.CharField(max_length=50, choices = status_choices, default = bat_dau ) #bat dau, tren may bay, den Hai Quan VN, da giao hang
+    b_package=models.ManyToManyField(Package)
+
+    def is_not_shipped(self):
+        return self.p_status in (self.bat_dau)
+
+    def is_en_route(self):
+        return self.p_status in (self.tren_may_bay)
+
+    def is_delivered(self):
+        return self.p_status in (self.da_giao_hang)
+
+    def is_at_custom(self):
+        return self.p_status in (self.den_Hai_Quan_VN)
+
+class Mawb(models.Model):
+    m_sender = models.ForeignKey(Sender)
+    m_receiver = models.ForeignKey(Receiver)
+    m_mawb = models.CharField(max_length=50)
+    m_date = models.DateTimeField()
+    m_weight = models.DecimalField(max_digits= 10, decimal_places=2)
+    m_piece = models.IntegerField()
+
+    def __unicode__(self):
+        return m_number
+
+class Hawb(models.Model):
+    h_number = models.IntegerField()
+    h_sender = models.ForeignKey(Sender)
+    h_receiver = models.ForeignKey(Receiver)
+    h_weight = models.DecimalField(max_digits= 10, decimal_places=2)
+    h_piece = models.IntegerField()
+    h_mawb = models.ForeignKey(Mawb)
+    h_flight1 = models.CharField(max_length=50)
+    h_flight1_date = models.CharField(max_length=50)
+    h_flight2 = models.CharField(max_length=50)
+
+    def __unicode__(self):
+        return h_number
+
+
 
